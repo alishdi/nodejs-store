@@ -1,0 +1,26 @@
+{
+  "name": "store-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alishdi/nodejs-store.git"
+  },
+  "author": "ali shahidi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alishdi/nodejs-store/issues"
+  },
+  "homepage": "https://github.com/alishdi/nodejs-store#readme",
+  "dependencies": {
+    "auto-bind": "^4.0.0",
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.3.2"
+  }
+}
