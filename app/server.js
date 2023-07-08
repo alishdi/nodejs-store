@@ -1,3 +1,4 @@
+const { indexRouter } = require('./router/index.router');
 
 module.exports = class Application {
     #express = require('express');
@@ -50,10 +51,8 @@ module.exports = class Application {
     }
 
     createRoutes() {
-        this.#app.get('/', (req, res, next) => {
-            res.json({
-                msg: 'this is a shopping express application🤞'
-            })
-        })
+        this.#app.use(indexRouter)
+  
+
     }
 }
