@@ -16,11 +16,14 @@ module.exports = class Application {
 
     }
     configApplication() {
+        const morgan = require('morgan');
         const path = require('path');
+        this.#app.use(morgan('dev'))
         this.#app.use(this.#express.static(path.join(__dirname, "..", 'public')))
         this.#app.use(this.#express.json());
         this.#app.use(this.#express.urlencoded({ extended: true }));
     }
+
     createServer() {
         this.#app.listen(this.#PORT, () => {
             console.log(`server run on port ${this.#PORT} http://localhost:${this.#PORT}`);
@@ -32,7 +35,19 @@ module.exports = class Application {
             console.log('server connected to mongodb');
         },
             (err) => { console.log(err.message) });
+
+        mongoose.connection.on('connected', () => {
+            console.log('mongoos connected to DB');
+        });
+        mongoose.connection.on('disconnected', () => {
+            console.log('mongoos disconnected to DB');
+        });
+        process.on('SIGINT', async () => {
+            await mongoose.connection.close();
+            process.exit(0)
+        })
     };
+
 
     errorHandlig() {
         this.#app.use((req, res, next) => {
@@ -52,7 +67,7 @@ module.exports = class Application {
 
     createRoutes() {
         this.#app.use(indexRouter)
-  
+
 
     }
 }
