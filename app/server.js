@@ -1,5 +1,8 @@
 const { indexRouter } = require('./router/index.router');
 const createError = require('http-errors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerjsdoc = require('swagger-jsdoc');
+
 
 module.exports = class Application {
     #express = require('express');
@@ -23,6 +26,27 @@ module.exports = class Application {
         this.#app.use(this.#express.static(path.join(__dirname, "..", 'public')))
         this.#app.use(this.#express.json());
         this.#app.use(this.#express.urlencoded({ extended: true }));
+        this.#app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerjsdoc({
+            swaggerDefinition: {
+                info: {
+                    title: 'alishahidi shop',
+                    version: '1,0,0',
+                    description: 'مرجع آموزش برنامه نویسی',
+                    contact:{
+                        name:'ali shahidi',
+                        url:"https://freerealapi.com",
+                        email:'alishahidi267@gmail.com'
+                    }
+                },
+                servers: [
+                    {
+                        url: 'http://localhost:5000'
+                    }
+                ]
+
+            },
+            apis: ['./app/router/*/*.js']
+        })))
     }
 
     createServer() {
