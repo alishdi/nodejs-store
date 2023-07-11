@@ -1,4 +1,5 @@
 const { indexRouter } = require('./router/index.router');
+const createError = require('http-errors');
 
 module.exports = class Application {
     #express = require('express');
@@ -8,11 +9,11 @@ module.exports = class Application {
     constructor(PORT, DB_URI) {
         this.#PORT = PORT;
         this.#DB_URI = DB_URI;
-        this.connectToDataBase()
+        this.connectToDataBase();
         this.createServer();
         this.configApplication();
         this.createRoutes();
-        this.errorHandlig()
+        this.errorHandlig();
 
     }
     configApplication() {
@@ -49,18 +50,17 @@ module.exports = class Application {
     };
 
 
-    errorHandlig() {
+    errorHandlig(req, res, next) {
         this.#app.use((req, res, next) => {
-            return res.status(404).json({
-                statusCode: 404,
-                msg: 'Notfound Err'
-            })
+            next(createError.NotFound('Notfound Err'))
         })
         this.#app.use((error, req, res, next) => {
             console.log(error);
+            const serverError = createError.InternalServerError()
             return res.status(error?.status || 500).json({
-                statusCode: error?.status || 500,
-                msg: error?.message || 'Notfound Err'
+                statusCode: error?.status || serverError.status,
+                msg: error?.message || serverError.message,
+
             })
         })
     }
