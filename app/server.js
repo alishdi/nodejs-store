@@ -45,7 +45,7 @@ module.exports = class Application {
                 ]
 
             },
-            apis: ['./app/router/*/*.js']
+            apis: ['./app/router/**/*.js']
         })))
     }
 
@@ -91,7 +91,6 @@ module.exports = class Application {
 
     createRoutes() {
         this.#app.use(indexRouter)
-
 
     }
 }

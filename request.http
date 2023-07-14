@@ -1,7 +1,8 @@
-POST http://localhost:5000/user/login
+POST http://localhost:5000/user/get-otp
 Content-Type: application/json
 
 
 {
-   "mobile":"09129420221"
+   
+   "mobile":"09380994132"
 }

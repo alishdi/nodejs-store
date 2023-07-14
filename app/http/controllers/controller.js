@@ -1,13 +1,15 @@
+const autoBind = require("auto-bind");
 
 class Controller {
-
-    testMethod() {
-        return 'test string';
+    constructor(){
+        autoBind(this)
     }
+
+
 }
 
 module.exports = {
-    Controller,
-    Controlled:new Controller()
+    Controller
+   
     
 }
