@@ -2,6 +2,7 @@ const { indexRouter } = require('./router/index.router');
 const createError = require('http-errors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerjsdoc = require('swagger-jsdoc');
+const cors=require('cors');
 
 
 module.exports = class Application {
@@ -23,6 +24,7 @@ module.exports = class Application {
         const morgan = require('morgan');
         const path = require('path');
         this.#app.use(morgan('dev'))
+        this.#app.use(cors())
         this.#app.use(this.#express.static(path.join(__dirname, "..", 'public')))
         this.#app.use(this.#express.json());
         this.#app.use(this.#express.urlencoded({ extended: true }));

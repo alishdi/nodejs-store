@@ -8,7 +8,7 @@ const { Controller } = require("../../controller");
 class UserAuthController extends Controller {
     async getOpt(req, res, next) {
         try {
-            console.log(req.body);
+            
             await authSchema.validateAsync(req.body)
             const { mobile } = req.body
             const code = numberRandomGenerate()
