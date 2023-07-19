@@ -13,9 +13,10 @@ module.exports = class Application {
     constructor(PORT, DB_URI) {
         this.#PORT = PORT;
         this.#DB_URI = DB_URI;
+        this.configApplication();
+        this.initRedis()
         this.connectToDataBase();
         this.createServer();
-        this.configApplication();
         this.createRoutes();
         this.errorHandlig();
 
@@ -74,6 +75,9 @@ module.exports = class Application {
             process.exit(0)
         })
     };
+    initRedis(){
+        require('./utils/init_redis');
+    }
 
 
     errorHandlig(req, res, next) {

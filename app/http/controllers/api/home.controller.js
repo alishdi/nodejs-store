@@ -5,8 +5,9 @@ const createError = require('http-errors');
 class HomeController extends Controller {
     async indexpage(req, res, next) {
         try {
-             await authSchema.validateAsync(req.body)
-            return res.status(200).send('index page')
+            console.log(req.headers);
+            await authSchema.validateAsync(req.body)
+            return res.send({msg:'index page'})
         } catch (error) {
             next(createError.BadRequest(error.message))
         }

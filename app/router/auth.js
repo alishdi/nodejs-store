@@ -61,6 +61,24 @@ UserAuthRouter.post('/get-otp', UserAuthController.getOpt)
  *  
  */
 UserAuthRouter.post('/chek-otp', UserAuthController.checkOtp)
+/**
+ * @swagger
+ *  /user/refresh-token:
+ *      post:
+ *          summary: send refresh token for get new refresh token
+ *          description: refresh token
+ *          parameters: 
+ *              -   in: body
+ *                  required: true
+ *                  type: string
+ *                  name: refreshToken
+ *          responses:
+ *              200:
+ *                  description: success1`
+ *      
+ *          
+ */
+UserAuthRouter.post('/refresh-token',UserAuthController.refreshToken)
 
 module.exports = {
     UserAuthRouter

@@ -1,5 +1,5 @@
 const { UserModel } = require("../../../../model/users");
-const { numberRandomGenerate, signAccessToken } = require("../../../../utils/func");
+const { numberRandomGenerate, signAccessToken, verifyRfreshToken, signRefreshToken } = require("../../../../utils/func");
 const { authSchema, checkOtpSchema } = require("../../../validator/user/auth.schema")
 const createError = require('http-errors');
 const { Controller } = require("../../controller");
@@ -8,13 +8,13 @@ const { Controller } = require("../../controller");
 class UserAuthController extends Controller {
     async getOpt(req, res, next) {
         try {
-            
+
             await authSchema.validateAsync(req.body)
             const { mobile } = req.body
             const code = numberRandomGenerate()
             const result = await this.saveUser(mobile, code)
             if (!result) return createError.BadRequest('ورود شما انجام نشد')
-            
+
             return res.status(200).send({
                 data: {
                     statusCode: 200,
@@ -37,9 +37,11 @@ class UserAuthController extends Controller {
             const now = Date.now()
             if (+user.otp.expireIn < now) throw createError.Unauthorized('کد شما منقضی شده است')
             const accesstoken = await signAccessToken(user._id)
+            const refreshToken = await signRefreshToken(user._id)
             return res.json({
                 data: {
-                    accesstoken
+                    accesstoken,
+                    refreshToken
                 }
             })
 
@@ -49,16 +51,35 @@ class UserAuthController extends Controller {
             next(error)
         }
     }
+    async refreshToken(req, res, next) {
+        try {
+            const { refreshToken } = req.body;
+            const mobile = await verifyRfreshToken(refreshToken);
+            const user = await UserModel.findOne({ mobile })
+            const accessToken = await signAccessToken(user._id)
+            const newRefreshToken = await signRefreshToken(user._id)
+            return res.json({
+                data: {
+                    accessToken,
+                    refreshToken: newRefreshToken
+                }
+            })
+
+        } catch (error) {
+            next(error)
+        }
+
+    }
 
     async saveUser(mobile, code) {
         let otp = {
             code,
             expireIn: new Date().getTime() + 120000
-            
+
         }
         const result = await this.checkExistUser(mobile)
         if (result) {
-            
+
             return (await this.updateUser(mobile, { otp }))
 
         }
@@ -80,6 +101,7 @@ class UserAuthController extends Controller {
         const updateResult = await UserModel.updateOne({ mobile }, { $set: objectData })
         return !!updateResult.modifiedCount
     }
+
 
 }
 

@@ -1,18 +1,19 @@
 const JWT = require('jsonwebtoken');
 const createError = require('http-errors');
 const { UserModel } = require('../model/users');
-const { ACCESS_TOKEN_SECRET_KEY } = require('./constant');
+const { ACCESS_TOKEN_SECRET_KEY, REFRESH_TOKEN } = require('./constant');
 function numberRandomGenerate() {
     return Math.floor((Math.random() * 90000) + 10000)
 }
+
 function signAccessToken(userId) {
     return new Promise(async (resolve, reject) => {
         const user = await UserModel.findById(userId)
         const payload = {
             mobile: user.mobile,
-            
+
         };
-        const secret = '7624d719b242bff33d89bbbf96ac845bcfe7e8622eee7d1aeda08ca7efbed7e4';
+
         const option = {
             expiresIn: '1h'
         };
@@ -22,10 +23,44 @@ function signAccessToken(userId) {
         })
     })
 }
+function signRefreshToken(userId) {
+    return new Promise(async (resolve, reject) => {
+        const user = await UserModel.findById(userId)
+        const payload = {
+            mobile: user.mobile,
 
+        };
+
+        const option = {
+            expiresIn: '1y'
+        };
+        JWT.sign(payload, REFRESH_TOKEN, option, (err, token) => {
+            if (err) createError.InternalServerError('sever err')
+            resolve(token)
+        })
+    })
+
+}
+function verifyRfreshToken(token) {
+    return new Promise((resolve, reject) => {
+        JWT.verify(token, REFRESH_TOKEN, async (err, decoded) => {
+
+            if (err) reject(createError.Unauthorized('وارد حساب کاربری خود شوید'))
+            const { mobile } = decoded || {}
+            const user = await UserModel.findOne({ mobile }, { password: 0 }, { token: 0 }, { otp: 0 })
+            if (!user) reject(createError.Unauthorized('حساب کاربری یافت نشد'))
+
+            resolve(mobile)
+        })
+    })
+
+
+}
 
 
 module.exports = {
     numberRandomGenerate,
-    signAccessToken
+    signAccessToken,
+    signRefreshToken,
+    verifyRfreshToken
 }

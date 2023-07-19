@@ -9,10 +9,11 @@ function verifyToken(req, res, next) {
 
     if (token && ['Bearer', 'bearer'].includes(bearer)) {
         JWT.verify(token, ACCESS_TOKEN_SECRET_KEY, async (err, decoded) => {
+         
             if (err) return next(createErr.Unauthorized('وارد حساب کاربری خود شوید'))
             const { mobile } = decoded || {}
             const user = await UserModel.findOne({ mobile }, { password: 0 }, { token: 0 }, { otp: 0 })
-            console.log(user);
+            
             if (!user) return next(createErr.Unauthorized('حساب کاربری یافت نشد'))
             req.user = user
             return next()
