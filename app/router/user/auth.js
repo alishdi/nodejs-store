@@ -74,7 +74,7 @@ UserAuthRouter.post('/chek-otp', UserAuthController.checkOtp)
  *                  name: refreshToken
  *          responses:
  *              200:
- *                  description: success1`
+ *                  description: success
  *      
  *          
  */

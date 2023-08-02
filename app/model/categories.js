@@ -1,11 +1,12 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 
-const Schema = new Schema({
-    title: { type: String, required: true }
+const categorySchema = new Schema({
+    title: { type: String, required: true },
+    parent: { type: Types.ObjectId, default: undefined }
 
 })
 
 
 module.exports = {
-    CategoryModel: model('category', Schema)
+    CategoryModel: model('category', categorySchema)
 }

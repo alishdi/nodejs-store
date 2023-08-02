@@ -85,7 +85,7 @@ module.exports = class Application {
             next(createError.NotFound('Notfound Err'))
         })
         this.#app.use((error, req, res, next) => {
-            console.log(error);
+            
             const serverError = createError.InternalServerError()
             return res.status(error?.status || 500).json({
                 statusCode: error?.status || serverError.status,
