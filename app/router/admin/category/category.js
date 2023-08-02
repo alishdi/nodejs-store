@@ -39,7 +39,68 @@ categoryRouter.post('/add-category', CategoryController.addCategory)
  * 
  * 
  */
+
 categoryRouter.get('/parents-category', CategoryController.getAllParents)
+
+
+/**
+ * @swagger
+ *  /admin/children/{parent}:
+ *      get:
+ *          tags: [admin-Panel]
+ *          summary: get all child of category
+ *          parameters: 
+ *              -   in: path
+ *                  name: parent
+ *                  required: true
+ *                  type: string
+ *          responses:
+ *              201:
+ *                  description: success
+ * 
+ *                     
+ * 
+ * 
+ */
+categoryRouter.get('/children/:parent',CategoryController.getChildOfParent)
+
+
+
+/**
+ * @swagger
+ *  /admin/category/all:
+ *      get:
+ *          tags: [admin-Panel]
+ *          summary: get all  of category
+ *          responses:
+ *              20:
+ *                  description: success
+ * 
+ *                     
+ * 
+ * 
+ */
+categoryRouter.get('/category/all',CategoryController.getAllCategory)
+/**
+ * @swagger
+ *  /admin/delete-category/{id}:
+ *      delete:
+ *          tags: [admin-Panel]
+ *          summary: removeCategory
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  required: true
+ *          responses:
+ *              20:
+ *                  description: success
+ * 
+ *                     
+ * 
+ * 
+ */
+categoryRouter.delete('/delete-category/:id',CategoryController.removeCategory)
 
 module.exports = {
     categoryRouter

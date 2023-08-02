@@ -1,10 +1,14 @@
 const { CategoryModel } = require("../../../model/categories");
 const { createError } = require("../../../utils/constant");
 const { addCategorySchema } = require("../../validator/category/category.schema");
-const { Controller } = require("../controller");
 
 
-class CategoryController extends Controller {
+
+class CategoryController {
+    constructor() {
+        this.removeCategory = this.removeCategory.bind(this)
+    }
+
 
     async addCategory(req, res, next) {
         try {
@@ -34,16 +38,57 @@ class CategoryController extends Controller {
         }
 
     }
-    removeCategory(req, res, next) {
+    async removeCategory(req, res, next) {
         try {
+            const { id } = req.params
+            const category = await this.checkExistCategory(id)
+            const delteResult = await CategoryModel.deleteOne({ _id: category._id })
+            if (delteResult.deletedCount == 0) createError.InternalServerError('حذف دسته بندی انجام نشد')
+            return res.status(202).json({
+                data: {
+                    message: 'حذف دسته بندی با موفقیت انجام شد',
+                    status: 200
+                }
+            })
 
         } catch (error) {
             next(error)
         }
 
     }
-    getAllCategory(req, res, next) {
+    async checkExistCategory(id) {
+        const category = await CategoryModel.findById(id)
+        if (!category) throw createError.NotFound('دسته بندی یافت نشد')
+        return category
+    }
+    async getAllCategory(req, res, next) {
         try {
+            const category = await CategoryModel.aggregate([
+                {
+                    $lookup: {
+                        from: 'categories',
+                        localField: '_id',
+                        foreignField: 'parent',
+                        as: 'children'
+                    }
+                }, {
+                    $project: {
+                        __v: 0,
+                        "children.__v": 0,
+                        "children.parent": 0
+                    }
+                },
+                {
+                    $match: {
+                        parent: undefined
+                    }
+                }
+            ])
+            return res.status(200).json({
+                data: {
+                    category
+                }
+            })
 
         } catch (error) {
             next(error)
@@ -73,8 +118,20 @@ class CategoryController extends Controller {
         }
 
     }
-    getChildOfParent(req, res, next) {
+    async getChildOfParent(req, res, next) {
         try {
+            const { parent } = req.params;
+            console.log(parent);
+            const child = await CategoryModel.find({ parent })
+            console.log(child);
+            if (!child) throw createError.NotFound('پیدا نشد')
+            return res.status(200).json({
+                data: {
+                    status: 200,
+                    success: true,
+                    child
+                }
+            })
 
         } catch (error) {
             next(error)
