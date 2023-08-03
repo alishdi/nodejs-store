@@ -101,6 +101,26 @@ categoryRouter.get('/category/all',CategoryController.getAllCategory)
  * 
  */
 categoryRouter.delete('/delete-category/:id',CategoryController.removeCategory)
+/**
+ * @swagger
+ *  /admin/get-category/{id}:
+ *      get:
+ *          tags: [admin-Panel]
+ *          summary: edite-category
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  required: true
+ *          responses:
+ *              20:
+ *                  description: success
+ * 
+ *                     
+ * 
+ * 
+ */
+categoryRouter.get('/get-category/:id',CategoryController.getCategoryById)
 
 module.exports = {
     categoryRouter

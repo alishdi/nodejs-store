@@ -1,6 +1,7 @@
 const { CategoryModel } = require("../../../model/categories");
 const { createError } = require("../../../utils/constant");
 const { addCategorySchema } = require("../../validator/category/category.schema");
+const mongoose = require('mongoose');
 
 
 
@@ -42,7 +43,12 @@ class CategoryController {
         try {
             const { id } = req.params
             const category = await this.checkExistCategory(id)
-            const delteResult = await CategoryModel.deleteOne({ _id: category._id })
+            const delteResult = await CategoryModel.deleteMany({
+                $or: [
+                    { _id: category._id },
+                    { parent: category._id }
+                ]
+            })
             if (delteResult.deletedCount == 0) createError.InternalServerError('حذف دسته بندی انجام نشد')
             return res.status(202).json({
                 data: {
@@ -63,19 +69,23 @@ class CategoryController {
     }
     async getAllCategory(req, res, next) {
         try {
+
             const category = await CategoryModel.aggregate([
                 {
-                    $lookup: {
+                    $graphLookup: {
                         from: 'categories',
-                        localField: '_id',
-                        foreignField: 'parent',
+                        startWith: '$_id',
+                        connectFromField: '_id',
+                        connectToField: 'parent',
+                        maxDepth: 5,
+                        depthField: 'depth',
                         as: 'children'
                     }
                 }, {
                     $project: {
                         __v: 0,
                         "children.__v": 0,
-                        "children.parent": 0
+
                     }
                 },
                 {
@@ -84,6 +94,7 @@ class CategoryController {
                     }
                 }
             ])
+
             return res.status(200).json({
                 data: {
                     category
@@ -95,8 +106,34 @@ class CategoryController {
         }
 
     }
-    getCategoryById(req, res, next) {
+    async getCategoryById(req, res, next) {
         try {
+            const { id: _id } = req.params;
+            const category = await CategoryModel.aggregate([
+                {
+                    $match: { _id: new mongoose.Types.ObjectId(_id) }
+
+                },
+                {
+                    $lookup: {
+                        from: 'categories',
+                        localField: '_id',
+                        foreignField: 'parent',
+                        as: 'children'
+                    }
+                }, {
+                    $project: {
+                        __v: 0,
+                        "children.__v": 0
+                    }
+                }
+            ])
+            return res.status(200).json({
+                data: {
+                    category,
+                    status: 200
+                }
+            })
 
         } catch (error) {
             next(error)
