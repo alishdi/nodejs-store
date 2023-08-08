@@ -1,6 +1,6 @@
 const { CategoryModel } = require("../../../model/categories");
 const { createError } = require("../../../utils/constant");
-const { addCategorySchema } = require("../../validator/category/category.schema");
+const { addCategorySchema, updateCategorySchema } = require("../../validator/category/category.schema");
 const mongoose = require('mongoose');
 
 
@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 class CategoryController {
     constructor() {
         this.removeCategory = this.removeCategory.bind(this)
+       
     }
 
 
@@ -31,8 +32,23 @@ class CategoryController {
         }
 
     }
-    editCategory(req, res, next) {
+    async editCategory(req, res, next) {
         try {
+            console.log(req.body);
+            const { id } = req.params;
+            console.log(id);
+            const { title } = req.body;
+            await updateCategorySchema.validateAsync(req.body)
+            
+            const resultOfUpdate = await CategoryModel.findByIdAndUpdate({ _id: id }, { $set: { title } })
+            console.log(resultOfUpdate);
+            if (resultOfUpdate.mo) throw createError.InternalServerError('خطای سرورو')
+            return res.status(200).json({
+                data: {
+                    message: 'به روزرسانی با موفقیت انجام شد',
+                    status: 200
+                }
+            })
 
         } catch (error) {
             next(error)
@@ -70,34 +86,35 @@ class CategoryController {
     async getAllCategory(req, res, next) {
         try {
 
-            const category = await CategoryModel.aggregate([
-                {
-                    $graphLookup: {
-                        from: 'categories',
-                        startWith: '$_id',
-                        connectFromField: '_id',
-                        connectToField: 'parent',
-                        maxDepth: 5,
-                        depthField: 'depth',
-                        as: 'children'
-                    }
-                }, {
-                    $project: {
-                        __v: 0,
-                        "children.__v": 0,
+            // const categories = await CategoryModel.aggregate([
+            //     {
+            //         $graphLookup: {
+            //             from: 'categories',
+            //             startWith: '$_id',
+            //             connectFromField: '_id',
+            //             connectToField: 'parent',
+            //             maxDepth: 5,
+            //             depthField: 'depth',
+            //             as: 'children'
+            //         }
+            //     }, {
+            //         $project: {
+            //             __v: 0,
+            //             "children.__v": 0,
 
-                    }
-                },
-                {
-                    $match: {
-                        parent: undefined
-                    }
-                }
-            ])
+            //         }
+            //     },
+            //     {
+            //         $match: {
+            //             parent: undefined
+            //         }
+            //     }
+            // ])
+            const categories = await CategoryModel.find({ parent: undefined }, { __v: 0 })
 
             return res.status(200).json({
                 data: {
-                    category
+                    categories
                 }
             })
 
@@ -158,9 +175,9 @@ class CategoryController {
     async getChildOfParent(req, res, next) {
         try {
             const { parent } = req.params;
-            console.log(parent);
+
             const child = await CategoryModel.find({ parent })
-            console.log(child);
+
             if (!child) throw createError.NotFound('پیدا نشد')
             return res.status(200).json({
                 data: {
@@ -174,6 +191,20 @@ class CategoryController {
             next(error)
         }
 
+    }
+    async getAllCategoryWihoutPopulate(req, res, next) {
+        try {
+            const categories = await CategoryModel.aggregate([
+            { $match: {} }
+            ])
+            return res.status(200).json({
+                data: {
+                    categories
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
     }
 
 }
