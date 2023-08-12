@@ -11,6 +11,7 @@ class UserAuthController extends Controller {
 
             await authSchema.validateAsync(req.body)
             const { mobile } = req.body
+            
             const code = numberRandomGenerate()
             const result = await this.saveUser(mobile, code)
             if (!result) return createError.BadRequest('ورود شما انجام نشد')
@@ -48,6 +49,7 @@ class UserAuthController extends Controller {
 
 
         } catch (error) {
+            console.log(error);
             next(error)
         }
     }

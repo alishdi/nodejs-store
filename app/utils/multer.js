@@ -7,8 +7,8 @@ function createRout(req) {
     const year = date.getFullYear().toString();
     const month = (date.getMonth() + 1).toString();
     const day = date.getDate().toString()
-    const directory = path.join(__dirname, '..', '..', 'public', 'uploads', 'blogs', year, month, day)
-    req.body.fileuploadpath = path.join('uploads', 'blogs', year, month, day)
+    const directory = path.join(__dirname, '..', '..', 'public', 'uploads', 'blogs-products', year, month, day)
+    req.body.fileuploadpath = path.join('uploads', 'blogs-products', year, month, day)
 
     fs.mkdirSync(directory, { recursive: true })
     return directory
@@ -32,7 +32,7 @@ const storage = multer.diskStorage({
             cb(null, fileName)
 
         }
-        
+       
 
 
     }

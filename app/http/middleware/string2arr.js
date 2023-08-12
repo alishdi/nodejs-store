@@ -17,7 +17,7 @@ const string2arr = (...args) => {
                     }
                 }
                 if (Array.isArray(req.body[field])) {
-                    console.log(req.body[field]);
+                    
                     req.body[field] = req.body[field].map(item => item.trim())
                     req.body[field] = [... new Set(req.body[field])]
                 }

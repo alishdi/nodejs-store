@@ -5,80 +5,104 @@ const UserAuthRouter = Router()
 
 /**
  * @swagger
- * /user/get-otp:
+ *  components:
+ *      schemas:
+ *          getOTP:
+ *              type: object
+ *              required:
+ *                  -   mobile
+ *              properties:
+ *                  mobile:
+ *                      type: string
+ *                      description: mobile phon FA-Ir
+ *          checkOPT:
+ *              type: object
+ *              required:
+ *                  -   mobile
+ *                  -   code
+ *              properties:
+ *                  mobile:
+ *                      type: string
+ *                      description: mobile phone FA-Ir
+ *                  code:
+ *                      type: integer
+ *                      description: otp code
+ *          refreshToken:
+ *              type: object
+ *              required:
+ *                  -   refreshToken
+ *              properties:
+ *                  refreshToken:
+ *                      type: string
+ *                      description: mobile phone FA-Ir
+
+ */
+
+/**
+ * @swagger
+ *  /user/get-otp:
  *      post:
- *          summary: login user in userpanel with phon number
- *          description: one time paswword(otp) login
- *          parameters:
- *          -   name: mobile
- *              description: fa-IRI phonenumber
- *              in: formData
+ *          tags: [authorization]
+ *          summary: sen your phone number
+ *          requestBody:
  *              required: true
- *              type: string
- *  
- *          responses: 
- *              201:
- *                  description: Success
- *              400:
- *                  description: Bad Request
- *              401:
- *                  description: Unauthorization
- *              500: 
- *                  description: Intenal server err 
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/getOTP'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/getOTP'
+ *          responses:
+ *              200:
+ *                  description: success
+ *          
  */
 UserAuthRouter.post('/get-otp', UserAuthController.getOpt)
 
 /**
  * @swagger
- * /user/chek-otp:
+ *  /user/check-otp:
  *      post:
- *          tags: [user-Authentication]
- *          summary: check-otp value in user controller
- *          description: chek otp with code - mobile and expire dates
- *          parameters:
- *          -   name: mobile
- *              description: fa-IRI phonenumber
- *              in: formData
+ *          tags: [authorization]
+ *          summary: sent your phone number & otp code
+ *          requestBody:
  *              required: true
- *              type: string
- *          -   name: code
- *              description: enter sms code recived
- *              in: formData
- *              required: true
- *              type: string
- *          responses: 
- *              201:
- *                  description: Success
- *              400:
- *                  description: Bad Request
- *              401:
- *                  description: Unauthorization
- *              500: 
- *                  description: Intenal server err 
- *              
- *              
- *  
- *  
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/checkOPT'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/checkOPT'
+ *          responses:
+ *              200:
+ *                  description: success
+ *          
  */
-UserAuthRouter.post('/chek-otp', UserAuthController.checkOtp)
+
+UserAuthRouter.post('/check-otp', UserAuthController.checkOtp)
+
 /**
  * @swagger
  *  /user/refresh-token:
  *      post:
- *          summary: send refresh token for get new refresh token
- *          description: refresh token
- *          parameters: 
- *              -   in: body
- *                  required: true
- *                  type: string
- *                  name: refreshToken
+ *          tags: [authorization]
+ *          summary: send your refresh token
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/refreshToken'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/refreshToken'
  *          responses:
  *              200:
- *                  description: success
- *      
- *          
+ *                  description: success       
  */
-UserAuthRouter.post('/refresh-token',UserAuthController.refreshToken)
+UserAuthRouter.post('/refresh-token', UserAuthController.refreshToken)
 
 module.exports = {
     UserAuthRouter

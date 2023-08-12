@@ -8,7 +8,6 @@ const createBlogschema = Joi.object({
     filename: Joi.string().pattern(/(\.png|\.jpg|\.jpeg|\.webp|\.gif)$/).error(createError.BadRequest('عکس صحیح نمیباشد')),
     fileuploadpath: Joi.allow(),
     tags: Joi.array().min(0).max(20).error(createError.BadRequest('برچسب ها نمیتوانند بیشتر از 20 ایتم باشند')),
-    tags: Joi.allow(),
     category: Joi.string().pattern(mongoIdPattern).error(createError.BadRequest('دسته بندی مورد نظر یافت نشد')),
 })
 

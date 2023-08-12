@@ -10,7 +10,8 @@ const { ACCESS_TOKEN_SECRET_KEY } = require('../../utils/constant');
 function verifyToken(req, res, next) {
     const headers = req.headers;
 
-    const [bearer, token] = headers?.accesstoken?.split(' ') || []
+    const [bearer, token] = headers?.authorization?.split(' ') || []
+
 
     if (token && ['Bearer', 'bearer'].includes(bearer)) {
         JWT.verify(token, ACCESS_TOKEN_SECRET_KEY, async (err, decoded) => {

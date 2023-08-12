@@ -2,7 +2,7 @@ const { indexRouter } = require('./router/index.router');
 const createError = require('http-errors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerjsdoc = require('swagger-jsdoc');
-const cors=require('cors');
+const cors = require('cors');
 
 
 module.exports = class Application {
@@ -31,25 +31,40 @@ module.exports = class Application {
         this.#app.use(this.#express.urlencoded({ extended: true }));
         this.#app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerjsdoc({
             swaggerDefinition: {
+                openapi: "3.0.0",
                 info: {
                     title: 'alishahidi shop',
                     version: '1,0,0',
                     description: 'مرجع آموزش برنامه نویسی',
-                    contact:{
-                        name:'ali shahidi',
-                        url:"https://freerealapi.com",
-                        email:'alishahidi267@gmail.com'
+                    contact: {
+                        name: 'ali shahidi',
+                        url: "https://freerealapi.com",
+                        email: 'alishahidi267@gmail.com'
                     }
                 },
                 servers: [
                     {
                         url: 'http://localhost:5000'
                     }
-                ]
+                ],
+                components: {
+                    securitySchemes: {
+                        BearerAuth: {
+                            type: "http",
+                            scheme: "bearer",
+                            bearerFormat: "jwt"
+                        }
+                    }
+                },
+                security: [{ BearerAuth: [] }]
 
             },
             apis: ['./app/router/**/*.js']
-        })))
+        }),
+            {
+                explorer: true
+            }
+        ))
     }
 
     createServer() {
@@ -75,7 +90,7 @@ module.exports = class Application {
             process.exit(0)
         })
     };
-    initRedis(){
+    initRedis() {
         require('./utils/init_redis');
     }
 
@@ -83,9 +98,10 @@ module.exports = class Application {
     errorHandlig(req, res, next) {
         this.#app.use((req, res, next) => {
             next(createError.NotFound('Notfound Err'))
+            
         })
         this.#app.use((error, req, res, next) => {
-            
+
             const serverError = createError.InternalServerError()
             return res.status(error?.status || 500).json({
                 statusCode: error?.status || serverError.status,

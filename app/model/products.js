@@ -1,24 +1,24 @@
 const { Schema, model, Types } = require('mongoose');
+const { CommentsSchema } = require('./public.schema');
 
-const Schema = new Schema({
+const ProductSchema = new Schema({
     title: { type: String, required: true },
-    short_desk: { type: String, required: true },
-    total_desk: { type: String, required: true },
+    short_text: { type: String, required: true },
+    text: { type: String, required: true },
     images: { type: [String], required: true },
-    tags: { type: [String], default:[] },
-    category: { type: [Types.ObjectId], required: true },
-    comments: { type: String, default:[] },
-    like: { type: [Types.ObjectId], default:[] },
-    deslike: { type: [Types.ObjectId], default:[] },
-    bookmark: { type: [Types.ObjectId], default:[] },
+    tags: { type: [String], default: [] },
+    category: { type: [Types.ObjectId], ref: "category", required: true },
+    comments: { type: [CommentsSchema], default: [] },
+    like: { type: [Types.ObjectId], default: [] },
+    deslike: { type: [Types.ObjectId], default: [] },
+    bookmark: { type: [Types.ObjectId], default: [] },
     price: { type: Number, default: 0 },
-    descount: { type: Number, default: 0 },
+    discount: { type: Number, default: 0 },
     count: { type: Number, },
     type: { type: String, required: true },
-    time: { type: String, },
     format: { type: String, },
-    teacher: { type: String, required: true },
-    detail: {
+    supplier: { type: String, required: true },
+    feature: {
         type: Object, default: {
             length: '',
             height: 'Number',
@@ -33,5 +33,5 @@ const Schema = new Schema({
 
 
 module.exports = {
-    ProductsModel: model('product', Schema)
+    ProductsModel: model('product', ProductSchema)
 }

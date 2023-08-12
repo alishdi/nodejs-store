@@ -87,6 +87,7 @@ categoryRouter.get('/children/:parent', CategoryController.getChildOfParent)
  *      get:
  *          tags: [admin-Panel]
  *          summary: get all  of category
+ *          parameters:
  *              -   in: header  
  *                  name: accesstoken
  *                  type: string
@@ -108,18 +109,15 @@ categoryRouter.get('/category/all', CategoryController.getAllCategory)
  *      get:
  *          tags: [admin-Panel]
  *          summary: get all  of categories without populate
+ *          parameters:
  *              -   in: header  
  *                  name: accesstoken
  *                  type: string
  *                  value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MTM5Mjc1MywiZXhwIjoxNjkxMzk2MzUzfQ.anvrjq-MUJ1JT1sgajwv_5yqxYir7FDYEE5SyqtaA4M
  *                  example: Beare Token
  *          responses:
- *              20:
+ *              200:
  *                  description: success
- * 
- *                     
- * 
- * 
  */
 categoryRouter.get('/category/all-without-populate', CategoryController.getAllCategoryWihoutPopulate)
 
@@ -142,7 +140,7 @@ categoryRouter.get('/category/all-without-populate', CategoryController.getAllCa
  *                  type: string
  *                  required: true
  *          responses:
- *              20:
+ *              200:
  *                  description: success
  * 
  *                     
@@ -182,7 +180,7 @@ categoryRouter.get('/get-category/:id', CategoryController.getCategoryById)
  * @swagger
  *  /admin/update-category/{id}:
  *      patch:
- *          tags: [admin-Panel(category)]
+ *          tags: [admin-Panel]
  *          summary: create new category title
  *          parameters:
  *              -   in: header  

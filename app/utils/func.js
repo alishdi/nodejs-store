@@ -40,7 +40,7 @@ function signRefreshToken(userId) {
         JWT.sign(payload, REFRESH_TOKEN, option, async (err, token) => {
             if (err) reject(createError.InternalServerError('sever err'))
             await redisClient.SETEX(String(userId), (365 * 24 * 60 * 60), token)
-           
+
             resolve(token)
         })
     })
@@ -77,11 +77,19 @@ function deleteFieldInPublic(fileAddres) {
     }
 }
 
+function listOfImageFromRequest(files, fileuploadpath) {
+    if (files?.length > 0) {
+        return files.map(file => path.join((fileuploadpath.replace(/\\/g, '/')), file.filename))
+    }else{
+        return []
+    }
+}
 
 module.exports = {
     numberRandomGenerate,
     signAccessToken,
     signRefreshToken,
     verifyRfreshToken,
-    deleteFieldInPublic
+    deleteFieldInPublic,
+    listOfImageFromRequest
 }
