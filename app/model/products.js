@@ -21,7 +21,7 @@ const ProductSchema = new Schema({
     feature: {
         type: Object, default: {
             length: '',
-            height: 'Number',
+            height: '',
             width: '',
             weight: '',
             colors: [],
@@ -30,7 +30,7 @@ const ProductSchema = new Schema({
         }
     },
 })
-
+ProductSchema.index({ text: 'text', short_text: 'text', title: 'text' })
 
 module.exports = {
     ProductsModel: model('product', ProductSchema)

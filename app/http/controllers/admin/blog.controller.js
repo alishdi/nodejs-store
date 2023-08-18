@@ -20,8 +20,8 @@ class BlogController {
 
             const blog = await BlogModel.create({ title, text, short_text, category, tags, image, author })
             return res.status(201).json({
+                status: 201,
                 data: {
-                    status: 201,
                     message: 'ایجاد بلاگ با موفقیت ایجاد شد',
 
                 }
@@ -142,7 +142,7 @@ class BlogController {
             Object.keys(data).forEach(key => {
                 if (blackListFields.includes(key)) delete data[key]
                 if (typeof data[key] == 'string') data[key] = data[key].trim();
-                if (Array.isArray(data[key]) && Array.length > 0) data[key] = data[key].map(item => item.trim())
+                if (Array.isArray(data[key]) && data[key].length > 0) data[key] = data[key].map(item => item.trim())
                 if (nullishData.includes(data[key])) delete data[key]
 
             })
@@ -151,8 +151,8 @@ class BlogController {
             if (blog.modifiedCount == 0) throw createError.InternalServerError('خطای سرور')
 
             return res.status(200).json({
+                status: 200,
                 data: {
-                    status: 200,
                     message: 'با موفقیت انجام شد',
 
                 }

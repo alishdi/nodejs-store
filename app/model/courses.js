@@ -18,7 +18,7 @@ const CourseSchema = new Schema({
     title: { type: String, required: true },
     short_text: { type: String, required: true },
     text: { type: String, required: true },
-    images: { type: String, required: true },
+    image: { type: String, required: true },
     tags: { type: [String], default: [] },
     category: { type: [Types.ObjectId], ref: "category", required: true },
     comments: { type: [CommentsSchema], default: [] },
@@ -29,13 +29,15 @@ const CourseSchema = new Schema({
     discount: { type: Number, default: 0 },
     count: { type: Number, },
     type: { type: String, default: "free", required: true },
+    status: { type: String, default: "notstarted" },
     time: { type: String, default: "00:00:00" },
-    techer: { type: Types.ObjectId, ref: 'user', required: true },
-    chapter: { type: [ChapterSchema], default: [] },
+    teacher: { type: Types.ObjectId, ref: 'user', required: true },
+    chapters: { type: [ChapterSchema], default: [] },
     students: { type: [Types.ObjectId], default: [], ref: 'user' }
 
 
 })
+CourseSchema.index({ title: 'text', short_text: 'text', text: 'text' })
 
 
 module.exports = {

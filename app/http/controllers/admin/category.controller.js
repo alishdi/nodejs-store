@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 class CategoryController {
     constructor() {
         this.removeCategory = this.removeCategory.bind(this)
-       
+
     }
 
 
@@ -20,8 +20,8 @@ class CategoryController {
             const cattegory = await CategoryModel.create({ title, parent })
             if (!cattegory) throw createError.InternalServerError('خطای داخلی')
             return res.status(201).json({
+                status: 201,
                 data: {
-                    status: 201,
                     message: 'دسته بندی با موفقیت اضافه شد'
                 }
             })
@@ -36,17 +36,17 @@ class CategoryController {
         try {
             console.log(req.body);
             const { id } = req.params;
-            console.log(id);
+           
             const { title } = req.body;
             await updateCategorySchema.validateAsync(req.body)
-            
+
             const resultOfUpdate = await CategoryModel.findByIdAndUpdate({ _id: id }, { $set: { title } })
             console.log(resultOfUpdate);
             if (resultOfUpdate.mo) throw createError.InternalServerError('خطای سرورو')
             return res.status(200).json({
+        status: 200,
                 data: {
                     message: 'به روزرسانی با موفقیت انجام شد',
-                    status: 200
                 }
             })
 
@@ -67,9 +67,9 @@ class CategoryController {
             })
             if (delteResult.deletedCount == 0) createError.InternalServerError('حذف دسته بندی انجام نشد')
             return res.status(202).json({
+        status: 200,
                 data: {
                     message: 'حذف دسته بندی با موفقیت انجام شد',
-                    status: 200
                 }
             })
 
@@ -113,6 +113,7 @@ class CategoryController {
             const categories = await CategoryModel.find({ parent: undefined }, { __v: 0 })
 
             return res.status(200).json({
+                status:200,
                 data: {
                     categories
                 }
@@ -146,9 +147,9 @@ class CategoryController {
                 }
             ])
             return res.status(200).json({
+                status: 200,
                 data: {
-                    category,
-                    status: 200
+                    category
                 }
             })
 
@@ -161,8 +162,8 @@ class CategoryController {
         try {
             const parents = await CategoryModel.find({ parent: undefined })
             return res.json({
+                status: 200,
                 data: {
-                    status: 200,
                     parents
                 }
             })
@@ -180,8 +181,8 @@ class CategoryController {
 
             if (!child) throw createError.NotFound('پیدا نشد')
             return res.status(200).json({
+        status: 200,
                 data: {
-                    status: 200,
                     success: true,
                     child
                 }
@@ -195,9 +196,10 @@ class CategoryController {
     async getAllCategoryWihoutPopulate(req, res, next) {
         try {
             const categories = await CategoryModel.aggregate([
-            { $match: {} }
+                { $match: {} }
             ])
             return res.status(200).json({
+                status:200,
                 data: {
                     categories
                 }

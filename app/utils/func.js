@@ -80,9 +80,31 @@ function deleteFieldInPublic(fileAddres) {
 function listOfImageFromRequest(files, fileuploadpath) {
     if (files?.length > 0) {
         return files.map(file => path.join((fileuploadpath.replace(/\\/g, '/')), file.filename))
-    }else{
+    } else {
         return []
     }
+}
+function copyObjet(object) {
+    return JSON.parse(JSON.stringify(object))
+}
+
+function setFeature(body) {
+    const { colors, width, weight, height, length } = body
+    let feature = {}
+    feature.colors = colors
+    if (!isNaN(width) || !isNaN(height) || !isNaN(weight) || !isNaN(length)) {
+        if (!width) feature.width = 0
+        else feature.width = width
+        if (!height) feature.height = 0
+        else feature.height = height
+        if (!length) feature.length = 0
+        else feature.length = length
+        if (!weight) feature.weight = 0
+        else feature.weight = weight
+
+    } 
+
+    return feature
 }
 
 module.exports = {
@@ -91,5 +113,7 @@ module.exports = {
     signRefreshToken,
     verifyRfreshToken,
     deleteFieldInPublic,
-    listOfImageFromRequest
+    listOfImageFromRequest,
+    copyObjet,
+    setFeature
 }

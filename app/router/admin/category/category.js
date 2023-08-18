@@ -2,30 +2,42 @@ const { Router } = require('express');
 const { CategoryController } = require('../../../http/controllers/admin/category.controller');
 /**
  * @swagger
+ *  components:
+ *      schemas:
+ *          Category:
+ *              type: object
+ *              required:
+ *                  -   title
+ *              properties:
+ *                  title:
+ *                      type: string
+ *                      description: the title of category
+ *                  parent:
+ *                      type: string
+ *                      description: the title of category
+ */
+
+
+
+/**
+ * @swagger
  *  /admin/add-category:
  *      post:
- *          tags: [admin-Panel]
+ *          tags: [Category(AdminPanel)]
  *          summary: create new category title
- *          parameters:
- *              -   in: header  
- *                  name: accesstoken
- *                  type: string
- *                  value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MTM5Mjc1MywiZXhwIjoxNjkxMzk2MzUzfQ.anvrjq-MUJ1JT1sgajwv_5yqxYir7FDYEE5SyqtaA4M
- *                  example: Beare Token
- *              -   in: formData
- *                  type: string
- *                  required: true
- *                  name: title
- *              -   in: formData
- *                  type: sring
- *                  name: parent
- *                  
- *         
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Category'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Category'
  *          responses:
  *              201:
  *                  description: success
- *  
-*/
+ */
 
 const categoryRouter = Router()
 categoryRouter.post('/add-category', CategoryController.addCategory)
@@ -34,20 +46,11 @@ categoryRouter.post('/add-category', CategoryController.addCategory)
  * @swagger
  *  /admin/parents-category:
  *      get:
- *          tags: [admin-Panel]
- *          summary: get all parents of category
- *              -   in: header  
- *                  name: accesstoken
- *                  type: string
- *                  value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MTM5Mjc1MywiZXhwIjoxNjkxMzk2MzUzfQ.anvrjq-MUJ1JT1sgajwv_5yqxYir7FDYEE5SyqtaA4M
- *                  example: Beare Token
+ *          tags: [Category(AdminPanel)]
+ *          summary: get All parents of Category or Category Heads
  *          responses:
- *              201:
+ *              200:
  *                  description: success
- * 
- *                     
- * 
- * 
  */
 
 categoryRouter.get('/parents-category', CategoryController.getAllParents)
@@ -57,25 +60,16 @@ categoryRouter.get('/parents-category', CategoryController.getAllParents)
  * @swagger
  *  /admin/children/{parent}:
  *      get:
- *          tags: [admin-Panel]
- *          summary: get all child of category
- *          parameters: 
- *              -   in: header  
- *                  name: accesstoken
- *                  type: string
- *                  value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MTM5Mjc1MywiZXhwIjoxNjkxMzk2MzUzfQ.anvrjq-MUJ1JT1sgajwv_5yqxYir7FDYEE5SyqtaA4M
- *                  example: Beare Token
+ *          tags: [Category(AdminPanel)]
+ *          summary: get All children of Parents Category 
+ *          parameters:
  *              -   in: path
  *                  name: parent
- *                  required: true
  *                  type: string
+ *                  required: true
  *          responses:
- *              201:
+ *              200:
  *                  description: success
- * 
- *                     
- * 
- * 
  */
 categoryRouter.get('/children/:parent', CategoryController.getChildOfParent)
 
@@ -85,21 +79,11 @@ categoryRouter.get('/children/:parent', CategoryController.getChildOfParent)
  * @swagger
  *  /admin/category/all:
  *      get:
- *          tags: [admin-Panel]
- *          summary: get all  of category
- *          parameters:
- *              -   in: header  
- *                  name: accesstoken
- *                  type: string
- *                  value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MTM5Mjc1MywiZXhwIjoxNjkxMzk2MzUzfQ.anvrjq-MUJ1JT1sgajwv_5yqxYir7FDYEE5SyqtaA4M
- *                  example: Beare Token
+ *          tags: [Category(AdminPanel)]
+ *          summary: get All Categories 
  *          responses:
- *              20:
+ *              200:
  *                  description: success
- * 
- *                     
- * 
- * 
  */
 categoryRouter.get('/category/all', CategoryController.getAllCategory)
 
@@ -107,14 +91,8 @@ categoryRouter.get('/category/all', CategoryController.getAllCategory)
  * @swagger
  *  /admin/category/all-without-populate:
  *      get:
- *          tags: [admin-Panel]
- *          summary: get all  of categories without populate
- *          parameters:
- *              -   in: header  
- *                  name: accesstoken
- *                  type: string
- *                  value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MTM5Mjc1MywiZXhwIjoxNjkxMzk2MzUzfQ.anvrjq-MUJ1JT1sgajwv_5yqxYir7FDYEE5SyqtaA4M
- *                  example: Beare Token
+ *          tags: [Category(AdminPanel)]
+ *          summary: get all categories without populate and nested structure
  *          responses:
  *              200:
  *                  description: success
@@ -127,50 +105,32 @@ categoryRouter.get('/category/all-without-populate', CategoryController.getAllCa
  * @swagger
  *  /admin/delete-category/{id}:
  *      delete:
- *          tags: [admin-Panel]
- *          summary: removeCategory
+ *          tags: [Category(AdminPanel)]
+ *          summary: remove category with object-id
  *          parameters:
- *              -   in: header  
- *                  name: accesstoken
- *                  type: string
- *                  value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MTM5Mjc1MywiZXhwIjoxNjkxMzk2MzUzfQ.anvrjq-MUJ1JT1sgajwv_5yqxYir7FDYEE5SyqtaA4M
- *                  example: Beare Token
  *              -   in: path
  *                  name: id
  *                  type: string
- *                  required: true
+ *                  required : true
  *          responses:
  *              200:
  *                  description: success
- * 
- *                     
- * 
- * 
  */
 categoryRouter.delete('/delete-category/:id', CategoryController.removeCategory)
 /**
  * @swagger
  *  /admin/get-category/{id}:
  *      get:
- *          tags: [admin-Panel]
- *          summary: get-category
+ *          tags: [Category(AdminPanel)]
+ *          summary: find category by object-id
  *          parameters:
- *              -   in: header  
- *                  name: accesstoken
- *                  type: string
- *                  value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MTM5Mjc1MywiZXhwIjoxNjkxMzk2MzUzfQ.anvrjq-MUJ1JT1sgajwv_5yqxYir7FDYEE5SyqtaA4M
- *                  example: Beare Token
  *              -   in: path
  *                  name: id
  *                  type: string
- *                  required: true
+ *                  required : true
  *          responses:
  *              200:
  *                  description: success
- * 
- *                     
- * 
- * 
  */
 
 categoryRouter.get('/get-category/:id', CategoryController.getCategoryById)
@@ -180,29 +140,28 @@ categoryRouter.get('/get-category/:id', CategoryController.getCategoryById)
  * @swagger
  *  /admin/update-category/{id}:
  *      patch:
- *          tags: [admin-Panel]
- *          summary: create new category title
+ *          tags: [Category(AdminPanel)]
+ *          summary: edit or update category title with object id
  *          parameters:
- *              -   in: header  
- *                  name: accesstoken
- *                  type: string
- *                  value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MTM5Mjc1MywiZXhwIjoxNjkxMzk2MzUzfQ.anvrjq-MUJ1JT1sgajwv_5yqxYir7FDYEE5SyqtaA4M
- *                  example: Beare Token
  *              -   in: path
- *                  type: string
- *                  required: true
  *                  name: id
- *              -   in: formData
- *                  type: sring
- *                  name: title
- *                  
- *                  
- *         
+ *                  type: string
+ *                  required : true
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Category'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Category'
  *          responses:
- *              201:
+ *              200:
  *                  description: success
- *  
-*/
+ *              500:    
+ *                  description: internalServerErorr
+ */
 categoryRouter.patch('/update-category/:id', CategoryController.editCategory)
 
 
