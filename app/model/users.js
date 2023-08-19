@@ -22,7 +22,14 @@ const schema = new Schema({
     birthday: { type: String },
     rolles: { type: [String], default: ['USER'] },
     courses: { type: [Types.ObjectId], ref: 'cours', default: [] }
-})
+},
+    {
+        timestamps: true,
+        toJSON: {
+            virtuals: true
+        }
+    }
+)
 
 
 module.exports = {

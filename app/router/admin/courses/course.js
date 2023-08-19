@@ -38,6 +38,21 @@ const coursesRouter = Router()
  *                      text: 
  *                          type: string
  *                          example: describ about this chapter
+ *          editChapter:
+ *                  type: object
+ *                  required:
+ *                      -   id
+ *                      -   title
+ *                  properties:
+ *                      id:
+ *                          type: string
+ *                          example: 64dc7dadfc16e867909b5db7
+ *                      title:
+ *                          type: string
+ *                          example: chapter 1 zero-hero js
+ *                      text: 
+ *                          type: string
+ *                          example: describ about this chapter
  *          course:
  *              type: object
  *              required: 
@@ -167,6 +182,71 @@ coursesRouter.get('/get-course-by-id/:id', CourseController.getCourseById)
  */
 
 coursesRouter.put('/add-chapter', CourseController.addChapter)
+/**
+ * @swagger
+ *  /admin/get-list-chapter/{id}:
+ *      get:
+ *          tags: [course(Adminpanel)]
+ *          summary: get list of chapter
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: text
+ *                  required: true
+ *          responses: 
+ *              200:
+ *                  description: success
+ *              
+ */
+
+coursesRouter.get('/get-list-chapter/:id', CourseController.listOfChapters)
+/**
+ * @swagger
+ *  /admin/remove-chapter/{id}:
+ *      patch:
+ *          tags: [course(Adminpanel)]
+ *          summary: remove chapter by id
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: text
+ *                  required: true
+ *          responses: 
+ *              200:
+ *                  description: success
+ *              
+ */
+
+coursesRouter.patch('/remove-chapter/:id', CourseController.removeChapterById)
+/**
+ * @swagger
+ *  /admin/update-chapter/{id}:
+ *      patch:
+ *          tags: [course(Adminpanel)]
+ *          summary: update chapter
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  required: true
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/editChapter'
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/editChapter'
+ *              
+ *          responses: 
+ *              200:
+ *                  description: success
+ *              
+ */
+
+
+coursesRouter.patch('/update-chapter/:id', CourseController.updateChapterById)
 // coursesRoute.post()
 // coursesRoute.delete()
 // coursesRoute.patch()
