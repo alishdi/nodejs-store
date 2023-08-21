@@ -2,14 +2,15 @@ const { Schema, model, Types } = require('mongoose');
 const { CommentsSchema } = require('./public.schema');
 const Episodes = new Schema({
     title: { type: String, required: true },
-    text: { type: String, required: true }
+    text: { type: String, required: true },
+    type: { type: String, default: 'unlock' },
+    time: { type: String, required: true },
+    videoAddress: { type: String, required: true },
 
 })
 const ChapterSchema = new Schema({
     title: { type: String, required: true },
     text: { type: String, default: '' },
-    type: { type: String, default: 'free' },
-    time: { type: String, required: true },
     episode: { type: [Episodes], default: [] }
 
 })

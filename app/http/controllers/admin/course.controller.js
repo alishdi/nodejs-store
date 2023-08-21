@@ -1,8 +1,10 @@
 const { Courses } = require("../../../model/courses")
 const path = require('path');
-const { createCourseschema } = require("../../validator/course/course.shchema");
+const { createCourseschema, createEpisodeschema } = require("../../validator/course/course.shchema");
 const { createError } = require("../../../utils/constant");
 const { default: mongoose } = require("mongoose");
+const { default: getVideoDurationInSeconds } = require("get-video-duration");
+const { getTime } = require("../../../utils/func");
 class CourseController {
     constructor() {
         this.addChapter = this.addChapter.bind(this)
@@ -42,7 +44,7 @@ class CourseController {
                 { path: 'teacher', select: { first_name: 1, last_name: 1, mobile: 1, email: 1 } }
             ]).sort({ _id: -1 })
             else courses = await Courses.find({}).populate([
-                { path: 'category', select: { title:1 } },
+                { path: 'category', select: { title: 1 } },
                 { path: 'teacher', select: { first_name: 1, last_name: 1, mobile: 1, email: 1 } }
             ]).sort({ _id: -1 })
 
@@ -169,6 +171,35 @@ class CourseController {
         }
 
     }
+    async addNewEpisode(req, res, next) {
+        try {
+            console.log(req.body);
+            const { title, type, text, chapterID, courseID, filename, fileuploadpath } = await createEpisodeschema.validateAsync(req.body)
+            const videoAddress = path.join(fileuploadpath, filename).replace(/\\/g, '/')
+            const videoURL = `${process.env.BASE_URL}:${process.env.PORT}/${videoAddress}`
+            const seconds = await getVideoDurationInSeconds(videoURL)
+            const time = getTime(seconds)
+             
+            const createEpisodResult = await Courses.updateOne({ _id: courseID, 'chapters._id': chapterID }, {
+                $push: {
+                    'chapters.$.episode': { title, type, text, videoAddress, time }
+                }
+            })
+          
+            if (createEpisodResult.modifiedCount == 0) throw createError.InternalServerError('افزودن ویدیو موفقیت امیز نبود')
+            return res.status(201).json({
+                status: 200,
+                data:{
+                    message:'افزودن فیلم با موفقیت انجام شد'
+                }
+            })
+
+
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
+    }
 
 
 
@@ -202,7 +233,6 @@ module.exports = {
 
 // {
 //     "data": {
-//       "accesstoken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MjQzNTExNiwiZXhwIjoxNjkyNDM4NzE2fQ.VkcHdRhBqP1sT-K4m1NoiKHs2Xu5YcTgKIYtoC6k5qo",
-//       "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MjQzNTExNiwiZXhwIjoxNzIzOTkyNzE2fQ.RiiQHsw5T3Hb1RCilevdBXzSuLdY4Wvd53-2KUPyYx0"
+//       "accesstoken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MjUxODYyMSwiZXhwIjoxNjkyNTIyMjIxfQ.OMpgMKvXubX63BAXSAxWHsutiRRXZP3QbEsnXwBSdh0",
+//       "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MjUxODYyMSwiZXhwIjoxNzI0MDc2MjIxfQ.mb1OWdAbtTtyNG0o49LbeRG6QaRSKnPZtM4VpVELfMs"
 //     }
-//   }

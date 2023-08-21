@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { CourseController } = require('../../../http/controllers/admin/course.controller');
-const { uploadFile } = require('../../../utils/multer');
+const { uploadFile, uploadvideo } = require('../../../utils/multer');
 const { string2arr } = require('../../../http/middleware/string2arr');
 const coursesRouter = Router()
 
@@ -23,6 +23,41 @@ const coursesRouter = Router()
  * @swagger
  *  components:
  *      schemas:
+ *          AddEpisode:
+ *              type: object
+ *              required:
+ *                  -   courseID
+ *                  -   chapterID
+ *                  -   title       
+ *                  -   text       
+ *                  -   type       
+ *                  -   video       
+ *              properties:
+ *                  courseID:
+ *                      type: string
+ *                      example: 64dc7dadfc16e867909b5db7
+ *                  chapterID: 
+ *                      type: string
+ *                      example: 64e082e14b47630a20f4db06
+ *                  title:
+ *                      type: string
+ *                      description: the title of episode
+ *                      example: ویدیو شماره یک - متغیر ها
+ *                  text: 
+ *                      type: string
+ *                      description: the describe about this episode
+ *                      example: توی این قسمت بطور کامل دررابطه با .... گفته شده
+ *                  type: 
+ *                      type: string
+ *                      description: the episode type (unlock or lock)
+ *                      enum:
+ *                          -   unlock
+ *                          -   lock
+ *                  video: 
+ *                      type: string
+ *                      description: the file of video 
+ *                      format: binary
+
  *          addChapter:
  *                  type: object
  *                  required:
@@ -181,6 +216,10 @@ coursesRouter.get('/get-course-by-id/:id', CourseController.getCourseById)
  *              
  */
 
+
+
+//  chapter part
+
 coursesRouter.put('/add-chapter', CourseController.addChapter)
 /**
  * @swagger
@@ -247,12 +286,32 @@ coursesRouter.patch('/remove-chapter/:id', CourseController.removeChapterById)
 
 
 coursesRouter.patch('/update-chapter/:id', CourseController.updateChapterById)
-// coursesRoute.post()
-// coursesRoute.delete()
-// coursesRoute.patch()
-// coursesRoute.get()
+
+/**
+ * @swagger
+ *  /admin/add-episode:
+ *      post:
+ *          tags: [course(Adminpanel)]
+ *          summary: create new Chapter for courses
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  multipart/form-data: 
+ *                      schema:
+ *                           $ref: '#/components/schemas/AddEpisode'
+ *          responses: 
+ *              200:
+ *                  description: success
+ *              
+ */
+coursesRouter.post('/add-episode',uploadvideo.single('video'), CourseController.addNewEpisode)
 
 
 module.exports = {
     coursesRouter
 }
+// {
+//     "data": {
+//       "accesstoken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MjUxNjk1MywiZXhwIjoxNjkyNTIwNTUzfQ.kN396fNGfw2Wucwdbz0QA1lpjZsQryr_oL4k46_b30Y",
+//       "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MjUxNjk1MywiZXhwIjoxNzI0MDc0NTUzfQ.ORonhvm7Yi_krxkBS8ZawBVNE-dMJ0C-XdPHORIMqL4"
+//     }

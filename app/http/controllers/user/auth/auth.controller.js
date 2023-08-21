@@ -97,7 +97,7 @@ class UserAuthController extends Controller {
     }
     async updateUser(mobile, objectData = {}) {
         Object.keys(objectData).forEach(key => {
-            if (["", " ", 0, null, undefined, "o", NaN].includes(objectData[key])) delete objectData[key]
+            if (["", " ", 0, null, undefined, "0", NaN].includes(objectData[key])) delete objectData[key]
 
         })
         const updateResult = await UserModel.updateOne({ mobile }, { $set: objectData })
