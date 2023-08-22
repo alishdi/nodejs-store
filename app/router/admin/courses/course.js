@@ -57,6 +57,27 @@ const coursesRouter = Router()
  *                      type: string
  *                      description: the file of video 
  *                      format: binary
+ *          editEpisode:
+ *              type: object     
+ *              properties:
+ *                  title:
+ *                      type: string
+ *                      description: the title of episode
+ *                      example: ویدیو شماره یک - متغیر ها
+ *                  text: 
+ *                      type: string
+ *                      description: the describe about this episode
+ *                      example: توی این قسمت بطور کامل دررابطه با .... گفته شده
+ *                  type: 
+ *                      type: string
+ *                      description: the episode type (unlock or lock)
+ *                      enum:
+ *                          -   unlock
+ *                          -   lock
+ *                  video: 
+ *                      type: string
+ *                      description: the file of video 
+ *                      format: binary
 
  *          addChapter:
  *                  type: object
@@ -133,6 +154,41 @@ const coursesRouter = Router()
  *                      format: binary
  *                  type:
  *                      $ref: '#/components/schemas/types'
+ *          edit-course:
+ *              type: object
+ *              properties:
+ *                  title:
+ *                      type: string
+ *                      description: the title of course
+ *                      example: عنوان دوره
+ *                  short_text:
+ *                      type: string
+ *                      description: the title of course
+ *                      example: متن کوتاه شده تستی
+ *                  text:
+ *                      type: string
+ *                      description: the title of course
+ *                      example: متن بلند تستی
+ *                  tags:
+ *                      type: array
+ *                      description: the title of product
+ *                  category:
+ *                      type: string
+ *                      description: the title of course
+ *                      example: 6279e994c1e47a98d0f356d3
+ *                  price:
+ *                      type: string
+ *                      description: the title of product
+ *                      example: 2500000
+ *                  discount:
+ *                      type: string
+ *                      description: the title of product
+ *                      example: 20
+ *                  image:
+ *                      type: string
+ *                      format: binary
+ *                  type:
+ *                      $ref: '#/components/schemas/types'
  */
 
 
@@ -142,7 +198,7 @@ const coursesRouter = Router()
  *  /admin/add-course:
  *      post:
  *          tags: [course(Adminpanel)]
- *          summary: create and save course
+ *          summary: edit and save course
  *          requestBody:
  *              required: true
  *              content:
@@ -156,6 +212,30 @@ const coursesRouter = Router()
 
  */
 coursesRouter.post('/add-course', uploadFile.single('image'), string2arr('tags'), CourseController.addCourses)
+/**
+ * @swagger
+ *  /admin/edit-course/{id}:
+ *      patch:
+ *          tags: [course(Adminpanel)]
+ *          summary: create and save course
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  required: true
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  multipart/form-data:
+ *                      schema:
+ *                          $ref: '#/components/schemas/edit-course'
+ *          
+ *          responses:
+ *              201:
+ *                  description: created new Product
+
+ */
+coursesRouter.patch('/edit-course/:id', uploadFile.single('image'), string2arr('tags'), CourseController.editCourseByID)
 
 
 /**
@@ -304,7 +384,54 @@ coursesRouter.patch('/update-chapter/:id', CourseController.updateChapterById)
  *                  description: success
  *              
  */
-coursesRouter.post('/add-episode',uploadvideo.single('video'), CourseController.addNewEpisode)
+coursesRouter.post('/add-episode', uploadvideo.single('video'), CourseController.addNewEpisode)
+/**
+ * @swagger
+ *  /admin/delete-episode/{id}:
+ *      delete:
+ *          tags: [course(Adminpanel)]
+ *          summary: delete Chapter for courses
+ *          parameters:
+ *              -   in: path
+ *                  type: string
+ *                  required: true
+ *                  name: id              
+ *          responses: 
+ *              200:
+ *                  description: success
+ *              
+ */
+coursesRouter.delete('/delete-episode/:id', CourseController.removeEpisodeByID)
+
+
+
+
+
+
+
+/**
+ * @swagger
+ *  /admin/edit-episode/{id}:
+ *      patch:
+ *          tags: [course(Adminpanel)]
+ *          summary: create new Chapter for courses
+ *          parameters:
+ *              -   in: path
+ *                  type: string
+ *                  required: true
+ *                  name: id       
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  multipart/form-data: 
+ *                      schema:
+ *                           $ref: '#/components/schemas/editEpisode'
+ *          responses: 
+ *              200:
+ *                  description: success
+ *              
+ */
+coursesRouter.patch('/edit-episode/:id', uploadvideo.single('video'), CourseController.editEpsodById)
 
 
 module.exports = {
@@ -312,6 +439,7 @@ module.exports = {
 }
 // {
 //     "data": {
-//       "accesstoken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MjUxNjk1MywiZXhwIjoxNjkyNTIwNTUzfQ.kN396fNGfw2Wucwdbz0QA1lpjZsQryr_oL4k46_b30Y",
-//       "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MjUxNjk1MywiZXhwIjoxNzI0MDc0NTUzfQ.ORonhvm7Yi_krxkBS8ZawBVNE-dMJ0C-XdPHORIMqL4"
+//       "accesstoken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MjYwMjA1NywiZXhwIjoxNjkyNjA1NjU3fQ.z4KUs73GCHtU72V4IYYtr50lIGllhsE1gBD5VzEo-5M",
+//       "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MjYwMjA1NywiZXhwIjoxNzI0MTU5NjU3fQ.qSTWHcrpObwFosxc0lMp5l0JdpwPbFcbmwOiH2x6rBY"
 //     }
+//   }

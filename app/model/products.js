@@ -32,6 +32,11 @@ const ProductSchema = new Schema({
 })
 ProductSchema.index({ text: 'text', short_text: 'text', title: 'text' })
 
+ProductSchema.virtual('imageURL').get(function(){
+    return `${process.env.BASE_URL}:${process.env.PORT}/${this.images}`
+})
+
+
 module.exports = {
     ProductsModel: model('product', ProductSchema)
 }

@@ -19,6 +19,12 @@ const BlogSchema = new Schema({
 }, { timestamps: true, versionKey: false })
 
 
+BlogSchema.virtual('imageURL').get(function(){
+    return `${process.env.BASE_URL}:${process.env.PORT}/${this.image}`
+})
+
+
+
 module.exports = {
     BlogModel: model('blog', BlogSchema)
 }

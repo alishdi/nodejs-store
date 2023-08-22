@@ -11,7 +11,7 @@ class UserAuthController extends Controller {
 
             await authSchema.validateAsync(req.body)
             const { mobile } = req.body
-            
+
             const code = numberRandomGenerate()
             const result = await this.saveUser(mobile, code)
             if (!result) return createError.BadRequest('ورود شما انجام نشد')
@@ -80,6 +80,7 @@ class UserAuthController extends Controller {
 
         }
         const result = await this.checkExistUser(mobile)
+        const countOfRefisterUser = await UserModel.count()
         if (result) {
 
             return (await this.updateUser(mobile, { otp }))
@@ -88,7 +89,7 @@ class UserAuthController extends Controller {
         return !!(await UserModel.create({
             mobile,
             otp,
-            rolles: ['USERS']
+            rolles: countOfRefisterUser > 2 ? "USER" : "ADMIN"
         }))
     }
     async checkExistUser(mobile) {

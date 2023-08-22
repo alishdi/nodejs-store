@@ -1,5 +1,6 @@
 const { Schema, model, Types } = require('mongoose');
 const { CommentsSchema } = require('./public.schema');
+const { getCourseTime } = require('../utils/func');
 const Episodes = new Schema({
     title: { type: String, required: true },
     text: { type: String, required: true },
@@ -7,7 +8,14 @@ const Episodes = new Schema({
     time: { type: String, required: true },
     videoAddress: { type: String, required: true },
 
+}, { toJSON: { virtuals: true } })
+
+
+Episodes.virtual('videoURL').get(function () {
+    return `${process.env.BASE_URL}:${process.env.PORT}/${this.videoAddress}`
 })
+
+
 const ChapterSchema = new Schema({
     title: { type: String, required: true },
     text: { type: String, default: '' },
@@ -31,7 +39,6 @@ const CourseSchema = new Schema({
     count: { type: Number, },
     type: { type: String, default: "free", required: true },
     status: { type: String, default: "notstarted" },
-    time: { type: String, default: "00:00:00" },
     teacher: { type: Types.ObjectId, ref: 'user', required: true },
     chapters: { type: [ChapterSchema], default: [] },
     students: { type: [Types.ObjectId], default: [], ref: 'user' }
@@ -43,6 +50,13 @@ const CourseSchema = new Schema({
     }
 })
 CourseSchema.index({ title: 'text', short_text: 'text', text: 'text' })
+CourseSchema.virtual('imageURL').get(function () {
+    return `${process.env.BASE_URL}:${process.env.PORT}/${this.image}`
+})
+CourseSchema.virtual('totlaTime').get(function () {
+    return getCourseTime(this.chapters || [])
+})
+
 
 
 module.exports = {

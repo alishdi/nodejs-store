@@ -1,14 +1,11 @@
 const { Schema, model } = require('mongoose');
 const { Types } = require('mongoose');
 
-const schema = new Schema({
+const userschema = new Schema({
     first_name: { type: String },
     last_name: { type: String },
     username: { type: String },
-    mobile: {
-        type: String, required: true, unique: true
-
-    },
+    mobile: { type: String, required: true, unique: true },
     email: { type: String, lowercase: true },
     password: { type: String },
     otp: {
@@ -21,7 +18,7 @@ const schema = new Schema({
     discount: { type: Number, default: 0 },
     birthday: { type: String },
     rolles: { type: [String], default: ['USER'] },
-    courses: { type: [Types.ObjectId], ref: 'cours', default: [] }
+    courses: { type: [Types.ObjectId], ref: 'course', default: [] }
 },
     {
         timestamps: true,
@@ -32,6 +29,9 @@ const schema = new Schema({
 )
 
 
+
+userschema.index({ mobile: "text" })
+
 module.exports = {
-    UserModel: model('user', schema)
+    UserModel: model('user', userschema)
 }
