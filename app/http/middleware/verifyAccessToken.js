@@ -29,21 +29,8 @@ function verifyToken(req, res, next) {
     else return next(createErr.Unauthorized('مجددا وارد حساب خود شوید'))
 }
 
-function checkRolle(role) {
-    return function (req, res, next) {
-        try {
-            const user = req.user
-            if (user.rolles.includes(role)) return next()
-            throw createErr.Forbidden('شما به این قسمت دسترسی ندارید')
-        } catch (error) {
-            next(error)
-        }
-    }
 
-
-}
 
 module.exports = {
-    verifyToken,
-    checkRolle
+    verifyToken
 }

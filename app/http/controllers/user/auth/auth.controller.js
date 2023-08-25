@@ -25,6 +25,7 @@ class UserAuthController extends Controller {
                 }
             })
         } catch (error) {
+            console.log(error);
             next(error)
         }
     }
@@ -89,7 +90,7 @@ class UserAuthController extends Controller {
         return !!(await UserModel.create({
             mobile,
             otp,
-            rolles: countOfRefisterUser > 2 ? "USER" : "ADMIN"
+            role: countOfRefisterUser > 2 ? "USER" : "ADMIN"
         }))
     }
     async checkExistUser(mobile) {

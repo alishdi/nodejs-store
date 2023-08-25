@@ -8,16 +8,22 @@ const { verifyToken, checkRolle } = require('../http/middleware/verifyAccessToke
 const { productRouter } = require('./admin/product/product');
 const { coursesRouter } = require('./admin/courses/course');
 const { userRouter } = require('./admin/user/user');
+const { premissionsRouter } = require('./premission');
+const { roleRouter } = require('./role');
+const { checkPermission } = require('../http/middleware/permission.guard');
+const { PERMISSIONS } = require('../utils/constant');
 
 const indexRouter = Router()
-indexRouter.use('/user', UserAuthRouter)
-indexRouter.use('/', HomeRoutes)
-indexRouter.use('/developer', devRouter)
-indexRouter.use('/admin', verifyToken, checkRolle('ADMIN'), categoryRouter)
-indexRouter.use('/admin', verifyToken, checkRolle("ADMIN"), blogRouter)
-indexRouter.use('/admin', verifyToken, checkRolle("ADMIN"), productRouter)
-indexRouter.use('/admin', verifyToken, checkRolle("ADMIN"), coursesRouter)
-indexRouter.use('/admin', verifyToken, checkRolle("ADMIN"), userRouter)
+indexRouter.use('/user', UserAuthRouter);
+indexRouter.use('/', HomeRoutes);
+indexRouter.use('/developer', devRouter);
+indexRouter.use('/admin', verifyToken, userRouter);
+indexRouter.use('/admin', verifyToken,checkPermission([PERMISSIONS.TEACHER]), coursesRouter);
+indexRouter.use('/admin', verifyToken,checkPermission([PERMISSIONS.SUPPLIER]),productRouter);
+indexRouter.use('/admin', verifyToken,checkPermission([PERMISSIONS.TEACHER]), blogRouter);
+indexRouter.use('/admin', verifyToken,checkPermission([PERMISSIONS.CONTENT_MANAGER]), categoryRouter);
+indexRouter.use('/admin', verifyToken,checkPermission([PERMISSIONS.ADMIN]), roleRouter);
+indexRouter.use('/admin', verifyToken,checkPermission([PERMISSIONS.ADMIN]), premissionsRouter);
 
 module.exports = {
     indexRouter

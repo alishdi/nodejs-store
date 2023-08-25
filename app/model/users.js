@@ -17,7 +17,7 @@ const userschema = new Schema({
     bills: { type: [], default: [] },
     discount: { type: Number, default: 0 },
     birthday: { type: String },
-    rolles: { type: [String], default: ['USER'] },
+    role: { type: String, default: 'USER' },
     courses: { type: [Types.ObjectId], ref: 'course', default: [] }
 },
     {
@@ -30,7 +30,7 @@ const userschema = new Schema({
 
 
 
-userschema.index({ mobile: "text" })
+userschema.index({ mobile: "text", username: "text", last_name: "text", first_name: 'text' })
 
 module.exports = {
     UserModel: model('user', userschema)
