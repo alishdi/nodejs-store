@@ -195,7 +195,7 @@ const coursesRouter = Router()
 
 /**
  * @swagger
- *  /admin/add-course:
+ *  /admin/course/add-course:
  *      post:
  *          tags: [course(Adminpanel)]
  *          summary: edit and save course
@@ -214,7 +214,7 @@ const coursesRouter = Router()
 coursesRouter.post('/add-course', uploadFile.single('image'), string2arr('tags'), CourseController.addCourses)
 /**
  * @swagger
- *  /admin/edit-course/{id}:
+ *  /admin/course/edit-course/{id}:
  *      patch:
  *          tags: [course(Adminpanel)]
  *          summary: create and save course
@@ -240,7 +240,7 @@ coursesRouter.patch('/edit-course/:id', uploadFile.single('image'), string2arr('
 
 /**
  * @swagger
- *  /admin/all-courses:
+ *  /admin/course/all-courses:
  *      get:
  *          tags: [course(Adminpanel)]
  *          summary: get all of courses
@@ -258,7 +258,7 @@ coursesRouter.patch('/edit-course/:id', uploadFile.single('image'), string2arr('
 coursesRouter.get('/all-courses', CourseController.getAllCourses)
 /**
  * @swagger
- *  /admin/get-course-by-id/{id}:
+ *  /admin/course/get-course-by-id/{id}:
  *      get:
  *          tags: [course(Adminpanel)]
  *          summary: get all of courses
@@ -276,7 +276,7 @@ coursesRouter.get('/all-courses', CourseController.getAllCourses)
 coursesRouter.get('/get-course-by-id/:id', CourseController.getCourseById)
 /**
  * @swagger
- *  /admin/add-chapter:
+ *  /admin/course/add-chapter:
  *      put:
  *          tags: [course(Adminpanel)]
  *          summary: add chapter
@@ -303,7 +303,7 @@ coursesRouter.get('/get-course-by-id/:id', CourseController.getCourseById)
 coursesRouter.put('/add-chapter', CourseController.addChapter)
 /**
  * @swagger
- *  /admin/get-list-chapter/{id}:
+ *  /admin/course/get-list-chapter/{id}:
  *      get:
  *          tags: [course(Adminpanel)]
  *          summary: get list of chapter
@@ -321,7 +321,7 @@ coursesRouter.put('/add-chapter', CourseController.addChapter)
 coursesRouter.get('/get-list-chapter/:id', CourseController.listOfChapters)
 /**
  * @swagger
- *  /admin/remove-chapter/{id}:
+ *  /admin/course/remove-chapter/{id}:
  *      patch:
  *          tags: [course(Adminpanel)]
  *          summary: remove chapter by id
@@ -339,7 +339,7 @@ coursesRouter.get('/get-list-chapter/:id', CourseController.listOfChapters)
 coursesRouter.patch('/remove-chapter/:id', CourseController.removeChapterById)
 /**
  * @swagger
- *  /admin/update-chapter/{id}:
+ *  /admin/course/update-chapter/{id}:
  *      patch:
  *          tags: [course(Adminpanel)]
  *          summary: update chapter
@@ -369,7 +369,7 @@ coursesRouter.patch('/update-chapter/:id', CourseController.updateChapterById)
 
 /**
  * @swagger
- *  /admin/add-episode:
+ *  /admin/course/add-episode:
  *      post:
  *          tags: [course(Adminpanel)]
  *          summary: create new Chapter for courses
@@ -387,7 +387,7 @@ coursesRouter.patch('/update-chapter/:id', CourseController.updateChapterById)
 coursesRouter.post('/add-episode', uploadvideo.single('video'), CourseController.addNewEpisode)
 /**
  * @swagger
- *  /admin/delete-episode/{id}:
+ *  /admin/course/delete-episode/{id}:
  *      delete:
  *          tags: [course(Adminpanel)]
  *          summary: delete Chapter for courses

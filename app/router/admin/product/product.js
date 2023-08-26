@@ -163,7 +163,7 @@ const productRouter = Router();
 
 /**
  * @swagger
- *  /admin/add-product:
+ *  /admin/product/add-product:
  *      post:
  *          tags: [Product(AdminPanel)]
  *          summary: create and save product
@@ -183,7 +183,7 @@ productRouter.post('/add-product', uploadFile.array('images', 10), string2arr('t
 
 /**
  * @swagger
- *  /admin/get-all-product:
+ *  /admin/product/get-all-product:
  *      get:
  *          tags: [Product(AdminPanel)]
  *          summary: create and save product
@@ -204,7 +204,7 @@ productRouter.get('/get-all-product', productController.getAllProduct)
 
 /**
  * @swagger
- *  /admin/get-product-by-id/{id}:
+ *  /admin/product/get-product-by-id/{id}:
  *      get:
  *          tags: [Product(AdminPanel)]
  *          summary: get one product by id
@@ -225,7 +225,7 @@ productRouter.get('/get-all-product', productController.getAllProduct)
 productRouter.get('/get-product-by-id/:id', productController.getoneProduct)
 /**
  * @swagger
- *  /admin/delete-product-by-id/{id}:
+ *  /admin/product/delete-product-by-id/{id}:
  *      delete:
  *          tags: [Product(AdminPanel)]
  *          summary: delete one product by id
@@ -250,7 +250,7 @@ productRouter.delete('/delete-product-by-id/:id', productController.removeProduc
 
 /**
  * @swagger
- *  /admin/edit-product/{id}:
+ *  /admin/product/edit-product/{id}:
  *      patch:
  *          tags: [Product(AdminPanel)]
  *          summary: edit and save product
@@ -281,8 +281,3 @@ module.exports = {
 
 
 
-// {
-//     "data": {
-//       "accesstoken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MTkxNDk2OCwiZXhwIjoxNjkxOTE4NTY4fQ.9Q_UN-X8OSczJ-sorfS1KmLOkQB-dAyWFuqFOb_PTAo",
-//       "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MTkxNDk2OCwiZXhwIjoxNzIzNDcyNTY4fQ.yU8tkfaHUG0U0BTsdVr-wgwUGxou__oS0vtpNImSrfE"
-//     }

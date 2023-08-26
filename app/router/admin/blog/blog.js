@@ -7,7 +7,7 @@ const blogRouter = Router()
 
 /**
  * @swagger
- *  /admin/get-list-blog:
+ *  /admin/blog/get-list-blog:
  *      get:
  *          tags: [blog(adminPanle)]
  *          summary: get all blogs
@@ -25,7 +25,7 @@ const blogRouter = Router()
 blogRouter.get('/get-list-blog', BlogController.GetListOfBlog)
 /**
  * @swagger
- *  /admin/create/blog:
+ *  /admin/blog/create/blog:
  *      post:
  *          tags: [blog(adminPanle)]
  *          summary: get all blogs
@@ -67,7 +67,7 @@ blogRouter.get('/get-list-blog', BlogController.GetListOfBlog)
 blogRouter.post('/create/blog', uploadFile.single('image'), string2arr("tags"), BlogController.createBlog)
 /**
  * @swagger
- *  /admin/update/blog/{id}:
+ *  /admin/blog/update/blog/{id}:
  *      patch:
  *          tags: [blog(adminPanle)]
  *          summary: update blogs
@@ -112,7 +112,7 @@ blogRouter.patch('/update/blog/:id', uploadFile.single('image'), string2arr("tag
 
 /**
  * @swagger
- *  /admin/get-blog/{id}:
+ *  /admin/blog/get-blog/{id}:
  *      get:
  *          tags: [blog(adminPanle)]
  *          summary: get blog by id
@@ -136,7 +136,7 @@ blogRouter.get('/get-blog/:id', BlogController.getOneBlogById)
 
 /**
  * @swagger
- *  /admin/delete-blog/{id}:
+ *  /admin/blog/delete-blog/{id}:
  *      delete:
  *          tags: [blog(adminPanle)]
  *          summary: delete blog by id

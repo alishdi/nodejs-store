@@ -32,7 +32,7 @@ const userRouter = Router()
 
 /**
  * @swagger
- *  /admin/get-all-user:
+ *  /admin/user/get-all-user:
  *      get:
  *          tags: [User(AdminPanel)]    
  *          summary: get all of users
@@ -50,7 +50,7 @@ const userRouter = Router()
 userRouter.get('/get-all-user',checkPermission([PERMISSIONS.ADMIN]), UserController.getAllUsers)
 /**
  * @swagger
- *  /admin/edit-user:
+ *  /admin/user/edit-user:
  *      patch:
  *          tags: [User(AdminPanel)]
  *          summary: update user datial and profile
@@ -73,7 +73,7 @@ userRouter.patch('/edit-user', UserController.updateUserProfile)
 
 /**
  * @swagger
- *  /admin/profile-user:
+ *  /admin/user/profile-user:
  *      get:
  *          tags: [User(AdminPanel)]    
  *          summary: get uuser profile

@@ -40,7 +40,7 @@ const premissionsRouter = Router()
 
 /**
  * @swagger
- *  /admin/premission/add:
+ *  /admin/permission/add:
  *      post:
  *          tags: [RBAC(Adminpanel)]
  *          summary: create new premission
@@ -56,7 +56,7 @@ const premissionsRouter = Router()
  *                  description: created new premission
  */
 
-premissionsRouter.post('/premission/add', Premissionscontroller.createNewPermissions)
+premissionsRouter.post('/add', Premissionscontroller.createNewPermissions)
 
 
 
@@ -65,7 +65,7 @@ premissionsRouter.post('/premission/add', Premissionscontroller.createNewPermiss
 
 /**
  * @swagger
- *  /admin/premission/edit/{id}:
+ *  /admin/permission/edit/{id}:
  *      patch:
  *          tags: [RBAC(Adminpanel)]
  *          summary: edit premission
@@ -86,10 +86,10 @@ premissionsRouter.post('/premission/add', Premissionscontroller.createNewPermiss
  *                  description: edit permission
 
  */
-premissionsRouter.patch('/premission/edit/:id',Premissionscontroller.updatePremissionByID)
+premissionsRouter.patch('/edit/:id',Premissionscontroller.updatePremissionByID)
 /**
  * @swagger
- *  /admin/premission/remove/{field}:
+ *  /admin/permission/remove/{field}:
  *     delete:
  *          tags: [RBAC(Adminpanel)]
  *          summary: remove premission
@@ -102,14 +102,14 @@ premissionsRouter.patch('/premission/edit/:id',Premissionscontroller.updatePremi
  *              200:
  *                  description: edit premission
  */
-premissionsRouter.delete('/premission/remove/:field',Premissionscontroller.removePremission)
+premissionsRouter.delete('/remove/:field',Premissionscontroller.removePremission)
 
 
 
 
 /**
  * @swagger
- *  /admin/premission/all:
+ *  /admin/permission/all:
  *      get:
  *          tags: [RBAC(Adminpanel)]
  *          summary: all premission
@@ -117,7 +117,7 @@ premissionsRouter.delete('/premission/remove/:field',Premissionscontroller.remov
  *              200:
  *                  description: edit role
  */
-premissionsRouter.get('/premission/all', Premissionscontroller.getAllPermissions)
+premissionsRouter.get('/all', Premissionscontroller.getAllPermissions)
 
 
 module.exports = {

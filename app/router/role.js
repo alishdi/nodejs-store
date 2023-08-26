@@ -56,7 +56,7 @@ const roleRouter = Router()
  *                  description: created new Product
  */
 
-roleRouter.post('/role/add',string2arr('premissions'), Rolecontroller.createNewRole)
+roleRouter.post('/add',string2arr('premissions'), Rolecontroller.createNewRole)
 
 
 
@@ -87,7 +87,7 @@ roleRouter.post('/role/add',string2arr('premissions'), Rolecontroller.createNewR
 
  */
 
-roleRouter.patch('/role/edit/:id',string2arr('premissions'),Rolecontroller.updateRoleByID)
+roleRouter.patch('/edit/:id',string2arr('premissions'),Rolecontroller.updateRoleByID)
 /**
  * @swagger
  *  /admin/role/remove/{field}:
@@ -103,7 +103,7 @@ roleRouter.patch('/role/edit/:id',string2arr('premissions'),Rolecontroller.updat
  *              200:
  *                  description: edit role
  */
-roleRouter.delete('/role/remove/:field',Rolecontroller.removeRole)
+roleRouter.delete('/remove/:field',Rolecontroller.removeRole)
 
 
 
@@ -119,7 +119,7 @@ roleRouter.delete('/role/remove/:field',Rolecontroller.removeRole)
  *                  description: edit role
  */
 
-roleRouter.get('/role/all', Rolecontroller.getAllRole)
+roleRouter.get('/all', Rolecontroller.getAllRole)
 
 module.exports = {
     roleRouter
