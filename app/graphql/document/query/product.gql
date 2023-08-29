@@ -1,0 +1,27 @@
+{
+products{
+title
+  text
+  imageURL
+  tags
+  category{
+    title
+    _id
+  }
+  price
+  supplier{
+    last_name
+    first_name
+
+  }
+  feature{
+height
+  width
+  weight
+  length}
+
+  
+  
+
+}
+}

@@ -17,7 +17,7 @@ const ProductSchema = new Schema({
     count: { type: Number, },
     type: { type: String, required: true },
     format: { type: String, },
-    supplier: { type: String, required: true },
+    supplier: { type: String, ref: 'user', required: true },
     feature: {
         type: Object, default: {
             length: '',
@@ -29,10 +29,16 @@ const ProductSchema = new Schema({
             madein: ''
         }
     },
-})
+},
+    {
+        toJSON: {
+            virtuals: true
+        }
+    }
+)
 ProductSchema.index({ text: 'text', short_text: 'text', title: 'text' })
 
-ProductSchema.virtual('imageURL').get(function(){
+ProductSchema.virtual('imageURL').get(function () {
     return `${process.env.BASE_URL}:${process.env.PORT}/${this.images}`
 })
 

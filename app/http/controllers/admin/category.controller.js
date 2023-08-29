@@ -86,31 +86,31 @@ class CategoryController {
     async getAllCategory(req, res, next) {
         try {
 
-            // const categories = await CategoryModel.aggregate([
-            //     {
-            //         $graphLookup: {
-            //             from: 'categories',
-            //             startWith: '$_id',
-            //             connectFromField: '_id',
-            //             connectToField: 'parent',
-            //             maxDepth: 5,
-            //             depthField: 'depth',
-            //             as: 'children'
-            //         }
-            //     }, {
-            //         $project: {
-            //             __v: 0,
-            //             "children.__v": 0,
+            const categories = await CategoryModel.aggregate([
+                {
+                    $graphLookup: {
+                        from: 'categories',
+                        startWith: '$_id',
+                        connectFromField: '_id',
+                        connectToField: 'parent',
+                        maxDepth: 5,
+                        depthField: 'depth',
+                        as: 'children'
+                    }
+                }, {
+                    $project: {
+                        __v: 0,
+                        "children.__v": 0,
 
-            //         }
-            //     },
-            //     {
-            //         $match: {
-            //             parent: undefined
-            //         }
-            //     }
-            // ])
-            const categories = await CategoryModel.find({ parent: undefined }, { __v: 0 })
+                    }
+                },
+                {
+                    $match: {
+                        parent: undefined
+                    }
+                }
+            ])
+            // const categories = await CategoryModel.find({ parent: undefined }, { __v: 0 })
 
             return res.status(200).json({
                 status:200,
