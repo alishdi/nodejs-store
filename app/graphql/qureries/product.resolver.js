@@ -9,10 +9,10 @@ const productResolver = {
     args: {
         category: { type: GraphQLString }
     },
-    resolve: async (_,args) => {
+    resolve: async (_, args) => {
         const { category } = args
         const findQuery = category ? { category } : {}
-        return await ProductsModel.find(findQuery).populate([{ path: 'supplier' },{path:'category'}])
+        return await ProductsModel.find(findQuery).populate([{ path: 'supplier' }, { path: 'category' }, { path: 'comments.answers' }, { path: 'comments.answers.user' }])
     }
 }
 

@@ -1,11 +1,24 @@
 const { Schema, Types } = require('mongoose');
+const AnswerSchema = new Schema({
+    user: { type: Types.ObjectId, ref: 'user', required: true },
+    comments: { type: String, required: true,ref:'comment' },
+    show: { type: Boolean, default: false },
+    isReplly: { type: Boolean, default: false },
+},
+    {
+        timestamps: true
+    })
 
 const CommentsSchema = new Schema({
-    user: { type: Types.ObjectId, ref: 'users', required: true },
+    user: { type: Types.ObjectId, ref: 'user', required: true },
     comments: { type: String, required: true },
-    createAt: { type: Date, default: new Date().getTime() },
-    parent: { type: Types.ObjectId, ref: 'comment' }
-})
+    show: { type: Boolean, default: false },
+    isReplly: { type: Boolean, default: true },
+    answers: { type: [AnswerSchema], default: [] }
+},
+    {
+        timestamps: true,
+    })
 
 
 

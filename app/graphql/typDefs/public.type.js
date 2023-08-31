@@ -28,10 +28,18 @@ const PublicCategoryType = new GraphQLObjectType({
 
     }
 })
+const responseType = new GraphQLObjectType({
+    name:"responseType",
+    fields:{
+        statusCode:{type:GraphQLString},
+        data:{type: anyType}
+    }
+})
 
 
 module.exports = {
     AuthorType,
     PublicCategoryType,
-    anyType
+    anyType,
+    responseType
 }
