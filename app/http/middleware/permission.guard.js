@@ -6,7 +6,6 @@ function checkPermission(requiredPermissions = []) {
     return async function (req, res, next) {
         try {
             const allPermissions = requiredPermissions.flat(2)
-            console.log(allPermissions);
             const user = req.user;
            
             const role = await RoleModel.findOne({title: user.role})

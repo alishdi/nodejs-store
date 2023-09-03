@@ -188,5 +188,7 @@ async function getComment(model, id) {
 module.exports = {
     createCommentForBlog,
     createCommentForCourse,
-    createCommentForProduct
+    createCommentForProduct,
+    checkExistBlog
+    
 }

@@ -13,7 +13,8 @@ const blogType = new GraphQLObjectType({
         image: { type: GraphQLString },
         tags: { type: new GraphQLList(GraphQLString) },
         category: { type: PublicCategoryType },
-        comments:{type:new GraphQLList(commentType)}
+        comments:{type:new GraphQLList(commentType)},
+        bookmark:{type:new GraphQLList(AuthorType)}
 
     }
 })

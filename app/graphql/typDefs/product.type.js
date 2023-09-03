@@ -32,7 +32,8 @@ const productType = new GraphQLObjectType({
         type: { type: GraphQLInt },
         supplier: { type: AuthorType },
         feature: { type: FeatureType },
-        comments: { type: new GraphQLList(commentType) }
+        comments: { type: new GraphQLList(commentType) },
+        bookmark:{type:new GraphQLList(AuthorType)}
 
     }
 })
