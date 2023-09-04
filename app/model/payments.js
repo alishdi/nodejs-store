@@ -1,10 +1,24 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 
-const Schema = new Schema({
+const Paymentschema = new Schema({
+    invoiceNumber: { type: String },
+    verify: { type: Boolean, default: false },
+    authority: { type: String },
+    amount: { type: Number },
+    description: { type: String, default: 'بابت خرید دوره' },
+    user: { type: Types.ObjectId, ref: 'user' },
+    basket: { type: Object, default: {} },
+    refID: { type: String, default: undefined },
+    cardHash: { type: String, default: undefined }
 
-})
+},
+    {
+        timestamps: true
+    }
+
+)
 
 
 module.exports = {
-    BlogModel: model('', Schema)
+    PaymentModel: model('payment', Paymentschema)
 }

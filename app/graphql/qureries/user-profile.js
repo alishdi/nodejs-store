@@ -8,6 +8,8 @@ const { ProductsModel } = require("../../model/products");
 const { Courses } = require("../../model/courses");
 const { anyType } = require("../typDefs/public.type");
 const { UserModel } = require("../../model/users");
+const {UserBasket}=require('../../utils/func');
+
 
 const getBookMarkBlog = {
     type: new GraphQLList(blogType),
@@ -44,112 +46,8 @@ const getUserBasket = {
     resolve: async (_, args, context) => {
         const { req } = context;
         const user = await verifyTokenAccessTokenGraphql(req)
-        const userDetail = await UserModel.aggregate([
-            {
-                $match: {
-                    _id: user._id
-                }
-            },
-            {
-                $project: {
-                    basket: 1
-                }
-            },
-            {
-                $lookup: {
-                    from: "products",
-                    localField: 'basket.products.productID',
-                    foreignField: '_id',
-                    as: 'productDetail'
-                }
-            },
-            {
-                $lookup: {
-                    from: "courses",
-                    localField: 'basket.courses.courseID',
-                    foreignField: '_id',
-                    as: 'courseDetail'
-                }
-            },
-
-            {
-                $addFields: {
-                    "productDetail": {
-                        $function: {
-                            body: function (productDetail, products) {
-                                return productDetail.map(function (product) {
-                                    const count = products.find(item => item.productID.valueOf() === product.
-                                        _id.valueOf()).count;
-                                    const totalPrice = count * product.price
-                                    return {
-                                        ...product,
-                                        basketCount: count,
-                                        totalPrice,
-                                        finalPrice: totalPrice - ((product.discount / 100) * totalPrice)
-                                    }
-                                })
-                            },
-                            args: ['$productDetail', '$basket.products'],
-                            lang: 'js'
-                        }
-
-
-                    },
-                    "courseDetail": {
-                        $function: {
-                            body: function (courseDeatail) {
-                                return courseDeatail.map(function (course) {
-                                    return {
-                                        ...course,
-                                        finalPrice: course.price - ((course.discount / 100) * course.price)
-                                    }
-                                })
-                            },
-                            args: ['$courseDetail'],
-                            lang: 'js'
-                        }
-
-
-                    },
-                    "payDetail": {
-                        $function: {
-                            body: function (courseDeatail, productDetail, products) {
-                                const courseAmount = courseDeatail.reduce(function (total, course) {
-                                    return total + (Number(course.price) - ((Number(course.discount) / 100) * course.price))
-
-
-                                }, 0)
-                                const productAmount = productDetail.reduce(function (total, product) {
-                                    const count = products.find(item => item.productID.valueOf() === product._id.valueOf()).count
-                                    const totalPrice = count * product.price
-                                    return total + (totalPrice - ((Number(product.discount) / 100) * totalPrice))
-
-
-                                }, 0)
-                                const courseId = courseDeatail.map(course => course._id.valueOf())
-                                const productId = productDetail.map(product => product._id.valueOf())
-                                return {
-                                    courseAmount,
-                                    productAmount,
-                                    payAmount: courseAmount + productAmount,
-                                    courseId,
-                                    productId
-                                }
-                            },
-                            args: ['$courseDetail', "$productDetail", '$basket.products'],
-                            lang: 'js'
-                        }
-
-
-                    }
-                }
-            }, {
-                $project: {
-                    basket: 0
-                }
-            }
-
-        ]);
+        const userDetail = await UserBasket(user._id)
+          
         return userDetail
     }
 }

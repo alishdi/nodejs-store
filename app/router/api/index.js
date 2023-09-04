@@ -24,6 +24,10 @@ const router = Router()
 router.get('/',verifyToken, HomeController.indexpage)
 
 
+     
+
+
+
 module.exports = {
     HomeRoutes: router
 }

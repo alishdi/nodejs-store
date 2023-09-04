@@ -6,9 +6,11 @@ const { verifyToken } = require('../http/middleware/verifyAccessToken');
 const { AdminApiRouter } = require('./admin/Admin.index.router');
 const { graphqlHTTP } = require('express-graphql');
 const { grafqlConfig } = require('../utils/graphql.config');
+const { paymetRouter } = require('./api/payment');
 const indexRouter = Router()
 indexRouter.use('/user', UserAuthRouter);
 indexRouter.use('/', HomeRoutes);
+indexRouter.use('/payment', paymetRouter);
 indexRouter.use('/developer', devRouter);
 indexRouter.use('/admin', verifyToken, AdminApiRouter)
 indexRouter.use('/graphql', graphqlHTTP(grafqlConfig))

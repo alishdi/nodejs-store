@@ -5,6 +5,7 @@ const { ACCESS_TOKEN_SECRET_KEY, REFRESH_TOKEN } = require('./constant');
 const redisClient = require('./init_redis');
 const fs = require('fs');
 const path = require('path');
+
 function numberRandomGenerate() {
     return Math.floor((Math.random() * 90000) + 10000)
 }
@@ -125,18 +126,18 @@ function getTime(time) {
     return hour + ":" + min + ":" + sec;
 }
 
-function getCourseTime(chapters = []){
+function getCourseTime(chapters = []) {
     let time, hour, minute, second = 0;
     for (const chapter of chapters) {
-        if(Array.isArray(chapter?.episode)){
+        if (Array.isArray(chapter?.episode)) {
             for (const episod of chapter.episode) {
-                if(episod?.time) time = episod.time.split(":") // [hour, min, second]
+                if (episod?.time) time = episod.time.split(":") // [hour, min, second]
                 else time = "00:00:00".split(":")
-                if(time.length == 3){ //01:11:11
+                if (time.length == 3) { //01:11:11
                     second += Number(time[0]) * 3600 // convert hour to second
                     second += Number(time[1]) * 60 // convert minute to second
                     second += Number(time[2]) //sum second with seond
-                }else if(time.length == 2){ //05:23
+                } else if (time.length == 2) { //05:23
                     second += Number(time[0]) * 60 // convert minute to second
                     second += Number(time[1]) //sum second with seond
                 }
@@ -146,10 +147,126 @@ function getCourseTime(chapters = []){
     hour = Math.floor(second / 3600); //convert second to hour
     minute = Math.floor(second / 60) % 60; //convert second to mintutes
     second = Math.floor(second % 60); //convert seconds to second
-    if(String(hour).length ==1) hour = `0${hour}`
-    if(String(minute).length ==1) minute = `0${minute}`
-    if(String(second).length ==1) second = `0${second}`
-    return (hour + ":" + minute + ":" +second) 
+    if (String(hour).length == 1) hour = `0${hour}`
+    if (String(minute).length == 1) minute = `0${minute}`
+    if (String(second).length == 1) second = `0${second}`
+    return (hour + ":" + minute + ":" + second)
+}
+
+
+async function UserBasket(userID, discount = {}) {
+    const userDetail = await UserModel.aggregate([
+        {
+            $match: {
+                _id: userID
+            }
+        },
+        {
+            $project: {
+                basket: 1
+            }
+        },
+        {
+            $lookup: {
+                from: "products",
+                localField: 'basket.products.productID',
+                foreignField: '_id',
+                as: 'productDetail'
+            }
+        },
+        {
+            $lookup: {
+                from: "courses",
+                localField: 'basket.courses.courseID',
+                foreignField: '_id',
+                as: 'courseDetail'
+            }
+        },
+
+        {
+            $addFields: {
+                "productDetail": {
+                    $function: {
+                        body: function (productDetail, products) {
+                            return productDetail.map(function (product) {
+                                const count = products.find(item => item.productID.valueOf() === product.
+                                    _id.valueOf()).count;
+                                const totalPrice = count * product.price
+                                return {
+                                    ...product,
+                                    basketCount: count,
+                                    totalPrice,
+                                    finalPrice: totalPrice - ((product.discount / 100) * totalPrice)
+                                }
+                            })
+                        },
+                        args: ['$productDetail', '$basket.products'],
+                        lang: 'js'
+                    }
+
+
+                },
+                "courseDetail": {
+                    $function: {
+                        body: function (courseDeatail) {
+                            return courseDeatail.map(function (course) {
+                                return {
+                                    ...course,
+                                    finalPrice: course.price - ((course.discount / 100) * course.price)
+                                }
+                            })
+                        },
+                        args: ['$courseDetail'],
+                        lang: 'js'
+                    }
+
+
+                },
+                "payDetail": {
+                    $function: {
+                        body: function (courseDeatail, productDetail, products) {
+                            const courseAmount = courseDeatail.reduce(function (total, course) {
+                                return total + (Number(course.price) - ((Number(course.discount) / 100) * course.price))
+
+
+                            }, 0)
+                            const productAmount = productDetail.reduce(function (total, product) {
+                                const count = products.find(item => item.productID.valueOf() === product._id.valueOf()).count
+                                const totalPrice = count * product.price
+                                return total + (totalPrice - ((Number(product.discount) / 100) * totalPrice))
+
+
+                            }, 0)
+                            const courseId = courseDeatail.map(course => course._id.valueOf())
+                            const productId = productDetail.map(product => product._id.valueOf())
+                            return {
+                                courseAmount,
+                                productAmount,
+                                payAmount: courseAmount + productAmount,
+                                courseId,
+                                productId
+                            }
+                        },
+                        args: ['$courseDetail', "$productDetail", '$basket.products'],
+                        lang: 'js'
+                    }
+
+
+                }
+            }
+        }, {
+            $project: {
+                basket: 0
+            }
+        }
+
+    ]);
+    return copyObjet(userDetail)
+}
+function invoiceNumberGenerator() {
+    let d = new Date();
+    let dayname = d.toLocaleString({ weekday: `long` }).split(",").join('')
+    return dayname
 }
 
 module.exports = {
@@ -162,5 +279,7 @@ module.exports = {
     copyObjet,
     setFeature,
     getTime,
-    getCourseTime
+    getCourseTime,
+    UserBasket,
+    invoiceNumberGenerator
 }
