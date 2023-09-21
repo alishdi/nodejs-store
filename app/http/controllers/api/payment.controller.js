@@ -36,7 +36,7 @@ class PaymentController extends Controller {
                 description,
                 user: user._id,
                 authority,
-                verify,
+                verify: false,
                 basket
             })
             if (code == 100 && authority) {

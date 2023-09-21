@@ -3,6 +3,12 @@ const createError = require('http-errors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerjsdoc = require('swagger-jsdoc');
 const cors = require('cors');
+const { initialSocket } = require('./TCP/socket.io/server');
+const { socketHandler } = require('./socket.io');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const { REFRESH_TOKEN } = require('./utils/constant');
+const { clienthelper } = require('./utils/client');
 
 
 module.exports = class Application {
@@ -14,6 +20,8 @@ module.exports = class Application {
         this.#PORT = PORT;
         this.#DB_URI = DB_URI;
         this.configApplication();
+        this.initTemplateEngins()
+        this.initClientSession()
         this.initRedis()
         this.connectToDataBase();
         this.createServer();
@@ -68,7 +76,11 @@ module.exports = class Application {
     }
 
     createServer() {
-        this.#app.listen(this.#PORT, () => {
+        const http = require('http');
+        const server = http.createServer(this.#app)
+        const io = initialSocket(server)
+        socketHandler(io)
+        server.listen(this.#PORT, () => {
             console.log(`server run on port ${this.#PORT} http://localhost:${this.#PORT}`);
         })
     }
@@ -93,12 +105,36 @@ module.exports = class Application {
     initRedis() {
         require('./utils/init_redis');
     }
+    initTemplateEngins() {
+        const ExprtessEjsLayouts = require('express-ejs-layouts');
+        this.#app.use(ExprtessEjsLayouts)
+        this.#app.set('view engine', 'ejs');
+        this.#app.set('views', 'resource/views');
+        this.#app.set('layout extractStyles', true);
+        this.#app.set('layout extractScripts', true);
+        this.#app.set('layout', './layouts/master');
+        this.#app.use((req,res,next)=>{
+            this.#app.locals=clienthelper(req,res)
+            next()
+        })
+    }
+    initClientSession() {
+        this.#app.use(cookieParser(REFRESH_TOKEN))
+        this.#app.use(session({
+            secret: REFRESH_TOKEN,
+            resave: true,
+            saveUninitialized: true,
+            cookie: {
+                secure: true
+            }
+        }))
+    }
 
 
     errorHandlig(req, res, next) {
         this.#app.use((req, res, next) => {
             next(createError.NotFound('Notfound Err'))
-            
+
         })
         this.#app.use((error, req, res, next) => {
 
