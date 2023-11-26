@@ -13,6 +13,7 @@ function numberRandomGenerate() {
 function signAccessToken(userId) {
     return new Promise(async (resolve, reject) => {
         const user = await UserModel.findById(userId)
+        
         const payload = {
             mobile: user.mobile,
 

@@ -6,6 +6,7 @@ const roomRouter = Router();
 
 roomRouter.post('/add',uploadFile.single('image') ,RoomController.addRoom)
 roomRouter.post('/get', RoomController.getListOfRooms)
+// roomRouter.use('room',ro)
 
 module.exports = {
     roomRouter

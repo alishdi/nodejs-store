@@ -21,7 +21,7 @@ class ProductController {
             const data = req.body;
 
             const productBody = await createProductsschema.validateAsync(data)
-            const { title, text, short_text, category, tags, count, price, discount, width, height, weight, length, colors } = productBody;
+            const { title, text, short_text, category, tags, count, price, discount } = productBody;
             const supplier = req.user._id
             let feature = setFeature(req.body)
             let type;
@@ -43,7 +43,7 @@ class ProductController {
             })
 
         } catch (error) {
-            console.log(error);
+            
             deleteFieldInPublic(req.body.image)
             next(error)
         }
@@ -82,9 +82,9 @@ class ProductController {
             if (updateResult.modifiedCount == 0) throw { status: createError.InternalServerError('server err') }
 
             return res.status(200).json({
-                status:200,
-                data:{
-                    message:'با موفقیت به روز رسانی شد',
+                status: 200,
+                data: {
+                    message: 'با موفقیت به روز رسانی شد',
 
                 }
             })

@@ -33,9 +33,7 @@ const addProductToBasket = {
                 }
 
 
-            }
-
-            )
+            })
         } else {
             await UserModel.updateOne({
                 _id: user._id,

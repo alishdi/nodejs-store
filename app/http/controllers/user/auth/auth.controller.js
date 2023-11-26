@@ -37,6 +37,7 @@ class UserAuthController extends Controller {
             if (!user) throw createError.NotFound('شماره موباید یا کاربر یافت نشد')
             if (user.otp.code != code) throw createError.Unauthorized('کد ارسال شده صحیح نمیباشد')
             const now = Date.now()
+        console.log(now);
             if (+user.otp.expireIn < now) throw createError.Unauthorized('کد شما منقضی شده است')
             const accesstoken = await signAccessToken(user._id)
             const refreshToken = await signRefreshToken(user._id)

@@ -24,9 +24,3 @@ module.exports = {
     createProductsschema
 }
 
-
-
-// "data": {
-//     "accesstoken": " ",
-//     "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTEyOTQyMDIyMSIsImlhdCI6MTY5MTczODMxNywiZXhwIjoxNzIzMjk1OTE3fQ.IEED3fLAgy_hBakE6FXWC9ncmeYA3OB9--Y3kYOOLBI"
-//   }
